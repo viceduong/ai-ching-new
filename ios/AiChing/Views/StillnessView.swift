@@ -24,9 +24,8 @@ struct StillnessView: View {
                 .padding(.horizontal, DS.Spacing.xl)
                 .padding(.bottom, DS.Spacing.sm)
 
-            // Push circle up near center of remaining space
-            // (asymmetric: small top gap, large bottom gap)
-            Spacer().frame(minHeight: 10, maxHeight: 60)
+            // Push circle to midpoint between centered and high
+            Spacer().frame(height: 30)
 
             // Hold circle with Tá»© TÆ°á»£ng (Four Symbols) background
             ZStack {
