@@ -46,7 +46,7 @@ struct ComputationView: View {
             HStack(spacing: 8) {
                 ProgressDots(progress: viewModel.computationProgress)
                 Text("\(Int(viewModel.computationProgress * 100))%")
-                    .font(DS.Font.mono(13, weight: .semibold))
+                    .font(DS.Font.mono(13).weight(.semibold))
                     .foregroundColor(DS.Color.gold)
             }
             .padding(.top, DS.Spacing.md)

@@ -69,7 +69,7 @@ struct IdleView: View {
             Spacer().frame(height: 20)
 
             // History link
-            HistoryLink()
+            HistoryLink(viewModel: viewModel)
                 .padding(.bottom, DS.Spacing.lg)
         }
         .background(RitualBackground())
@@ -89,6 +89,8 @@ struct HistoryLink: View {
     @ObservedObject var viewModel: RitualViewModel
     @State private var showHistory = false
     @AppStorage("lang_vi") var isVietnamese = false
+
+    var vi: Bool { isVietnamese }
 
     var body: some View {
         Button(action: { showHistory = true }) {

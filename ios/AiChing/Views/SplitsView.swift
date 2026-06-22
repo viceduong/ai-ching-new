@@ -27,7 +27,7 @@ struct SplitsView: View {
 
             // Line counter with trigram-style indicator
             HStack(spacing: 12) {
-                Text("\(L.Splits.line.text(vi)) \(viewModel.currentSplitIndex + 1) \(L.Splits.of.text(vi)) 6")
+                Text("\(t(L.Splits.line, vi)) \(viewModel.currentSplitIndex + 1) \(t(L.Splits.of, vi)) 6")
                     .font(DS.Font.serif(16, weight: .semibold))
                     .foregroundColor(DS.Color.gold)
                 Text("·")
