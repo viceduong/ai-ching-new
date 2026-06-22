@@ -210,8 +210,35 @@ struct HexagramDisplayView: View {
     let lineValues: [LineValue]?
     let movingPositions: [Int]
 
+    private struct LineInfo {
+        let isYang: Bool
+        let isMoving: Bool
+        let color: Color
+    }
+
+    private var lineInfos: [LineInfo] {
+        (0..<6).map { i in
+            let lineIdx = 5 - i
+            var isYang = false
+            var isMoving = false
+
+            if let values = lineValues, lineIdx < values.count {
+                let val = values[lineIdx]
+                isYang = val == .youngYang || val == .oldYang
+                isMoving = val == .oldYin || val == .oldYang
+            } else if let hex = hexagram {
+                let lines = hex.lines
+                isYang = lineIdx < lines.count ? lines[lineIdx] == .yang : false
+            }
+
+            let color: Color = isMoving ? .movingGold : (isSecondary ? .gold.opacity(0.7) : .inkBlack)
+            return LineInfo(isYang: isYang, isMoving: isMoving, color: color)
+        }
+    }
+
     var body: some View {
-        VStack(spacing: 0) {
+        let infos = lineInfos
+        return VStack(spacing: 0) {
             // Hexagram number and name
             if let hex = hexagram {
                 Text(hex.chineseName)
@@ -227,32 +254,14 @@ struct HexagramDisplayView: View {
                     .padding(.bottom, 12)
             }
 
-            // Hexagram lines (vertical stack, top→bottom)
+            // Hexagram lines (vertical stack, top to bottom)
             VStack(spacing: 6) {
-                ForEach((0..<6).reversed(), id: \.self) { i in
-                    let lineIdx = 5 - i
-                    let isYang: Bool
-                    let isMoving: Bool
-
-                    if let values = lineValues, lineIdx < values.count {
-                        let val = values[lineIdx]
-                        isYang = val == .youngYang || val == .oldYang
-                        isMoving = val == .oldYin || val == .oldYang
-                    } else if let hex = hexagram {
-                        let lines = hex.lines
-                        isYang = lineIdx < lines.count ? lines[lineIdx] == .yang : false
-                        isMoving = false
-                    } else {
-                        isYang = false
-                        isMoving = false
-                    }
-
-                    let color: Color = isMoving ? .movingGold : (isSecondary ? .gold.opacity(0.7) : .inkBlack)
-
+                ForEach(infos.indices.reversed(), id: \.self) { idx in
+                    let info = infos[idx]
                     HexagramLineView(
-                        isYang: isYang,
-                        isMoving: isMoving,
-                        color: color,
+                        isYang: info.isYang,
+                        isMoving: info.isMoving,
+                        color: info.color,
                         animated: !isSecondary,
                         width: 90
                     )

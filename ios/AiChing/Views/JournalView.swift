@@ -81,17 +81,14 @@ struct JournalView: View {
             }
             .navigationTitle("History")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Close") {
-                        dismiss()
-                    }
-                    .font(.system(.body, design: .serif))
-                    .foregroundColor(.inkBlack.opacity(0.6))
+            .navigationBarItems(
+                leading: Button("Close") {
+                    dismiss()
                 }
-
-                if !viewModel.savedReadings.isEmpty {
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                .font(.system(.body, design: .serif))
+                .foregroundColor(.inkBlack.opacity(0.6)),
+                trailing: Group {
+                    if !viewModel.savedReadings.isEmpty {
                         Button(action: {
                             viewModel.loadJournal()
                         }) {
@@ -100,7 +97,7 @@ struct JournalView: View {
                         }
                     }
                 }
-            }
+            )
         }
         .accentColor(.gold)
         .sheet(item: $selectedReading) { reading in
