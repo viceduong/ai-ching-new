@@ -10,7 +10,7 @@ actor EntropyService {
 
     // MARK: Dependencies
     private let motionManager = CMMotionManager()
-    private let motionAccumulator = MotionDataAccumulator()
+    let motionAccumulator = MotionDataAccumulator()
 
     // MARK: Collected State
     private(set) var holdStartTime: Date?
@@ -224,6 +224,14 @@ actor EntropyService {
             processorCount: ProcessInfo.processInfo.processorCount,
             sessionNonce: _sessionNonce
         )
+    }
+
+    // MARK: - Live Sensor Readings (for UI feedback)
+
+    nonisolated func latestAccel() -> (x: Double, y: Double, z: Double) {
+        let (accel, _, _) = motionAccumulator.snapshot()
+        guard let last = accel.last else { return (0, 0, 0) }
+        return (last.x, last.y, last.z)
     }
 
     // MARK: - Health

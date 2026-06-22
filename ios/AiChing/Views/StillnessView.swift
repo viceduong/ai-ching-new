@@ -20,7 +20,6 @@ struct StillnessView: View {
                     .foregroundColor(DS.Color.ink.opacity(0.7))
                     .multilineTextAlignment(.center)
 
-                LanguageToggle()
             }
             .padding(.horizontal, DS.Spacing.xl)
             .padding(.top, DS.Spacing.lg)
@@ -89,17 +88,88 @@ struct StillnessView: View {
                     }
             )
 
-            // Status text
+            // Status / sensor feedback
             if viewModel.holdFailed {
                 Text(t(L.Stillness.tooSoon, vi))
                     .font(DS.Font.serif(14))
                     .foregroundColor(DS.Color.crimson)
                     .padding(.top, DS.Spacing.lg)
             } else if viewModel.holdProgress > 0 {
-                Text("\(Int(viewModel.holdTargetDuration - Date().timeIntervalSince(viewModel.holdStartTime ?? Date())))s")
-                    .font(DS.Font.mono(14))
-                    .foregroundColor(DS.Color.inkFaded)
-                    .padding(.top, DS.Spacing.md)
+                VStack(spacing: 6) {
+                    // Time remaining
+                    Text("\(Int(viewModel.holdTargetDuration - Date().timeIntervalSince(viewModel.holdStartTime ?? Date())))s")
+                        .font(DS.Font.serif(16, weight: .bold))
+                        .foregroundColor(DS.Color.gold)
+
+                    // Sensor live feed
+                    HStack(spacing: 20) {
+                        // Force
+                        VStack(spacing: 2) {
+                            Text("FORCE")
+                                .font(DS.Font.mono(8))
+                                .foregroundColor(DS.Color.inkFaded)
+                            HStack(spacing: 2) {
+                                ForEach(0..<5) { i in
+                                    RoundedRectangle(cornerRadius: 1)
+                                        .fill(Double(i) / 4.0 < viewModel.touchForce ? DS.Color.gold : DS.Color.divider)
+                                        .frame(width: 8, height: 6)
+                                }
+                            }
+                        }
+
+                        // Jitter
+                        VStack(spacing: 2) {
+                            Text("JITTER")
+                                .font(DS.Font.mono(8))
+                                .foregroundColor(DS.Color.inkFaded)
+                            HStack(spacing: 2) {
+                                ForEach(0..<5) { i in
+                                    RoundedRectangle(cornerRadius: 1)
+                                        .fill(Double(i) / 4.0 < min(viewModel.jitterRadius / 30, 1) ? DS.Color.gold : DS.Color.divider)
+                                        .frame(width: 8, height: 6)
+                                }
+                            }
+                        }
+
+                        // Accel X
+                        VStack(spacing: 2) {
+                            Text("X")
+                                .font(DS.Font.mono(8))
+                                .foregroundColor(DS.Color.inkFaded)
+                            RoundedRectangle(cornerRadius: 1)
+                                .fill(abs(viewModel.accelX) > 0.05 ? DS.Color.gold : DS.Color.divider)
+                                .frame(width: 8, height: 6)
+                        }
+
+                        // Accel Y
+                        VStack(spacing: 2) {
+                            Text("Y")
+                                .font(DS.Font.mono(8))
+                                .foregroundColor(DS.Color.inkFaded)
+                            RoundedRectangle(cornerRadius: 1)
+                                .fill(abs(viewModel.accelY) > 0.05 ? DS.Color.gold : DS.Color.divider)
+                                .frame(width: 8, height: 6)
+                        }
+
+                        // Accel Z
+                        VStack(spacing: 2) {
+                            Text("Z")
+                                .font(DS.Font.mono(8))
+                                .foregroundColor(DS.Color.inkFaded)
+                            RoundedRectangle(cornerRadius: 1)
+                                .fill(abs(viewModel.accelZ) > 0.05 ? DS.Color.gold : DS.Color.divider)
+                                .frame(width: 8, height: 6)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 8)
+                    .background(
+                        RoundedRectangle(cornerRadius: DS.Radius.sm)
+                            .fill(DS.Color.surface)
+                            .overlay(RoundedRectangle(cornerRadius: DS.Radius.sm).stroke(DS.Color.gold.opacity(0.15), lineWidth: 0.5))
+                    )
+                }
+                .padding(.top, DS.Spacing.md)
             }
 
             Spacer()

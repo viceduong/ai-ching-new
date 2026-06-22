@@ -21,7 +21,6 @@ struct InquiryView: View {
                     .foregroundColor(DS.Color.ink.opacity(0.7))
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
-                LanguageToggle()
             }
             .padding(.horizontal, DS.Spacing.xl)
             .padding(.bottom, DS.Spacing.sm)
@@ -33,38 +32,38 @@ struct InquiryView: View {
                     .foregroundColor(DS.Color.inkFaded)
                     .padding(.horizontal, DS.Spacing.xl)
 
-                let examples = [L.Inquiry.ex1, L.Inquiry.ex2, L.Inquiry.ex3]
-                ForEach(examples.indices, id: \.self) { idx in
-                    Button(action: {
-                        let q = examples[idx]
-                        viewModel.questionText = t(q, vi)
-                        viewModel.registerKeystroke(character: String(t(q, vi).last ?? " "))
-                    }) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "text.quote")
-                                .font(.system(size: 10))
-                                .foregroundColor(DS.Color.gold.opacity(0.4))
-                            Text(t(examples[idx], vi))
-                                .font(DS.Font.serif(13))
-                                .foregroundColor(DS.Color.gold)
-                                .lineLimit(2)
-                                .multilineTextAlignment(.leading)
-                            Spacer()
-                        }
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 10)
-                        .background(
-                            RoundedRectangle(cornerRadius: DS.Radius.sm)
-                                .fill(DS.Color.surface)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: DS.Radius.sm)
-                                        .stroke(DS.Color.gold.opacity(0.12), lineWidth: 0.5)
-                                )
-                        )
-                        .padding(.horizontal, DS.Spacing.xl)
-                    }
-                    .buttonStyle(PlainButtonStyle())
+                // Ex1
+                HStack(spacing: 8) {
+                    Image(systemName: "text.quote").font(.system(size: 10)).foregroundColor(DS.Color.gold.opacity(0.4))
+                    Text(t(L.Inquiry.ex1, vi)).font(DS.Font.serif(13)).foregroundColor(DS.Color.gold).lineLimit(2).multilineTextAlignment(.leading)
+                    Spacer()
                 }
+                .padding(.horizontal, 12).padding(.vertical, 10)
+                .background(RoundedRectangle(cornerRadius: DS.Radius.sm).fill(DS.Color.surface).overlay(RoundedRectangle(cornerRadius: DS.Radius.sm).stroke(DS.Color.gold.opacity(0.12), lineWidth: 0.5)))
+                .padding(.horizontal, DS.Spacing.xl)
+                .onTapGesture { viewModel.questionText = t(L.Inquiry.ex1, vi) }
+
+                // Ex2
+                HStack(spacing: 8) {
+                    Image(systemName: "text.quote").font(.system(size: 10)).foregroundColor(DS.Color.gold.opacity(0.4))
+                    Text(t(L.Inquiry.ex2, vi)).font(DS.Font.serif(13)).foregroundColor(DS.Color.gold).lineLimit(2).multilineTextAlignment(.leading)
+                    Spacer()
+                }
+                .padding(.horizontal, 12).padding(.vertical, 10)
+                .background(RoundedRectangle(cornerRadius: DS.Radius.sm).fill(DS.Color.surface).overlay(RoundedRectangle(cornerRadius: DS.Radius.sm).stroke(DS.Color.gold.opacity(0.12), lineWidth: 0.5)))
+                .padding(.horizontal, DS.Spacing.xl)
+                .onTapGesture { viewModel.questionText = t(L.Inquiry.ex2, vi) }
+
+                // Ex3
+                HStack(spacing: 8) {
+                    Image(systemName: "text.quote").font(.system(size: 10)).foregroundColor(DS.Color.gold.opacity(0.4))
+                    Text(t(L.Inquiry.ex3, vi)).font(DS.Font.serif(13)).foregroundColor(DS.Color.gold).lineLimit(2).multilineTextAlignment(.leading)
+                    Spacer()
+                }
+                .padding(.horizontal, 12).padding(.vertical, 10)
+                .background(RoundedRectangle(cornerRadius: DS.Radius.sm).fill(DS.Color.surface).overlay(RoundedRectangle(cornerRadius: DS.Radius.sm).stroke(DS.Color.gold.opacity(0.12), lineWidth: 0.5)))
+                .padding(.horizontal, DS.Spacing.xl)
+                .onTapGesture { viewModel.questionText = t(L.Inquiry.ex3, vi) }
             }
 
             // Text input

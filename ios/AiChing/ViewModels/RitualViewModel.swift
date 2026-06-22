@@ -3,7 +3,7 @@ import SwiftUI
 
 // MARK: - Central ViewModel: 6-Step State Machine
 /// Orchestrates the entire ritual flow. Each view reads state and calls actions.
-/// The ViewModel enforces strict linear progression — no skipping states.
+/// The ViewModel enforces strict linear progression - no skipping states.
 @MainActor
 final class RitualViewModel: ObservableObject {
 
@@ -11,10 +11,15 @@ final class RitualViewModel: ObservableObject {
     @Published var currentStep: RitualStep = .idle
 
     // Step 1: Stillness
-    @Published var holdProgress: Double = 0.0         // 0.0–1.0
+    @Published var holdProgress: Double = 0.0         // 0.0-1.0
     @Published var isHolding = false
     @Published var holdFailed = false
-    @Published var holdTargetDuration: Double = 5.0   // randomized 4–7s
+    @Published var holdTargetDuration: Double = 5.0   // randomized 4-7s
+    @Published var touchForce: Double = 0.0           // 0-1 normalized
+    @Published var jitterRadius: Double = 0.0         // px of finger movement
+    @Published var accelX: Double = 0.0
+    @Published var accelY: Double = 0.0
+    @Published var accelZ: Double = 0.0
 
     // Step 2: Inquiry
     @Published var questionText = ""
@@ -22,14 +27,14 @@ final class RitualViewModel: ObservableObject {
     @Published var characterCount: Int = 0
 
     // Step 3: Splits
-    @Published var currentSplitIndex: Int = 0         // 0–5
+    @Published var currentSplitIndex: Int = 0         // 0-5
     @Published var splitProgress: [Double] = [0, 0, 0, 0, 0, 0]
     @Published var isDragging = false
     @Published var splitComplete = false
 
     // Step 4: Computation
     @Published var isComputing = false
-    @Published var computationProgress: Double = 0.0  // 0.0–1.0 (line-by-line reveal)
+    @Published var computationProgress: Double = 0.0  // 0.0-1.0 (line-by-line reveal)
     @Published var computedLines: [LineValue] = []
     @Published var computedResult: HexagramResult?
 
@@ -60,6 +65,7 @@ final class RitualViewModel: ObservableObject {
     // MARK: - Internal State
     var holdStartTime: Date?
     private var holdTimer: Timer?
+    private var accelTimer: Timer?
     // MARK: - Initialization
 
     init() {
@@ -77,7 +83,7 @@ final class RitualViewModel: ObservableObject {
 
     // MARK: - Reset
 
-    /// Full reset — returns to Idle and discards all collected entropy.
+    /// Full reset - returns to Idle and discards all collected entropy.
     func resetRitual() {
         // Cancel any in-progress operations
         holdTimer?.invalidate()
@@ -136,6 +142,8 @@ final class RitualViewModel: ObservableObject {
         isHolding = true
         holdFailed = false
         holdProgress = 0.0
+        touchForce = force
+        accelX = 0; accelY = 0; accelZ = 0
 
         haptics.lightImpact()
 
@@ -143,6 +151,18 @@ final class RitualViewModel: ObservableObject {
 
         // Start motion collection
         Task { await entropyService.startMotionCollection() }
+
+        // Poll accelerometer for live display
+        accelTimer?.invalidate()
+        accelTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
+            guard let self, self.isHolding else { return }
+            Task { @MainActor in
+                let accel = self.entropyService.latestAccel()
+                self.accelX = accel.x
+                self.accelY = accel.y
+                self.accelZ = accel.z
+            }
+        }
 
         // Progress timer
         holdTimer?.invalidate()
@@ -158,6 +178,11 @@ final class RitualViewModel: ObservableObject {
 
     func updateHold(at point: CGPoint, force: Double) {
         guard isHolding else { return }
+        touchForce = min(max(force, 0), 1)
+        if let start = holdStartTime {
+            let dist = hypot(point.x - 160, point.y - 160) // distance from center
+            jitterRadius = dist
+        }
         Task { await entropyService.updateHold(at: point, force: force) }
     }
 
@@ -402,7 +427,7 @@ final class RitualViewModel: ObservableObject {
         text += "Question: \(questionText)\n\n"
         text += data.primaryHexagram.map { "Primary: \($0.displayName)\n" } ?? ""
         text += "Seed: \(hashHex.prefix(16))...\n"
-        text += "— AiChing"
+        text += "- AiChing"
         return text
     }
 
@@ -437,7 +462,7 @@ final class RitualViewModel: ObservableObject {
             text += "Secondary: \(hexagramLookup.name(for: secondary))\n"
         }
         text += "Seed: \(reading.hashSeed.prefix(16))...\n"
-        text += "— AiChing"
+        text += "- AiChing"
         return text
     }
 

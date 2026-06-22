@@ -1,7 +1,7 @@
 import SwiftUI
 
 // MARK: - AiChing App Entry Point
-/// The Book of Changes — a sacred divination ritual app.
+/// The Book of Changes - a sacred divination ritual app.
 /// Fully offline, privacy-first, iOS 15+ compatible.
 @main
 struct AiChingApp: App {
@@ -23,6 +23,7 @@ struct AiChingApp: App {
 /// Routes between ritual steps based on ViewModel state.
 struct ContentView: View {
     @ObservedObject var viewModel: RitualViewModel
+    @State private var showSettings = false
 
     var body: some View {
         ZStack {
@@ -32,27 +33,21 @@ struct ContentView: View {
                 case .idle:
                     IdleView(viewModel: viewModel)
                         .transition(.opacity)
-
                 case .stillness:
                     StillnessView(viewModel: viewModel)
                         .transition(.opacity.combined(with: .move(edge: .trailing)))
-
                 case .inquiry:
                     InquiryView(viewModel: viewModel)
-                        .transition(.opacity.combined(with: .move(edge: .trailing)))
-
+                        .transition(.opacity)
                 case .splits:
                     SplitsView(viewModel: viewModel)
                         .transition(.opacity.combined(with: .move(edge: .trailing)))
-
                 case .computation:
                     ComputationView(viewModel: viewModel)
                         .transition(.opacity.combined(with: .scale(scale: 0.95)))
-
                 case .override:
                     OverrideView(viewModel: viewModel)
                         .transition(.opacity.combined(with: .move(edge: .trailing)))
-
                 case .oracle:
                     OracleView(viewModel: viewModel)
                         .transition(.opacity)
@@ -60,25 +55,19 @@ struct ContentView: View {
             }
             .animation(.easeInOut(duration: 0.4), value: viewModel.currentStep)
 
-            // Reset button (visible for Steps 1–5)
-            if viewModel.currentStep != .idle && viewModel.currentStep != .oracle {
+            // Settings button (top-right, hidden during oracle)
+            if viewModel.currentStep != .oracle {
                 VStack {
                     HStack {
                         Spacer()
-                        Button(action: {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                viewModel.resetRitual()
-                            }
-                        }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .font(.title2)
-                                .foregroundColor(.black.opacity(0.25))
-                                .padding(16)
-                        }
+                        SettingsButton(showDrawer: $showSettings)
                     }
                     Spacer()
                 }
             }
+
+            // Settings drawer overlay
+            SettingsDrawer(isOpen: $showSettings)
         }
         .ignoresSafeArea()
         .background(RitualBackground())

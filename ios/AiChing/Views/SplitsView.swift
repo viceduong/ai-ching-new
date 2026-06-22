@@ -25,8 +25,7 @@ struct SplitsView: View {
                         .font(DS.Font.serif(15))
                         .foregroundColor(DS.Color.ink.opacity(0.7))
                         .multilineTextAlignment(.center)
-                    LanguageToggle()
-                }
+                    }
                 .padding(.horizontal, DS.Spacing.xl)
                 .padding(.top, DS.Spacing.md)
 
