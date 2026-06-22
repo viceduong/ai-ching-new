@@ -6,11 +6,12 @@ import SwiftUI
 @main
 struct AiChingApp: App {
     @StateObject private var viewModel = RitualViewModel()
+    @AppStorage("themeOverride") private var themeOverride: String = "system"
 
     var body: some Scene {
         WindowGroup {
             ContentView(viewModel: viewModel)
-                .preferredColorScheme(nil) // Follow system
+                .preferredColorScheme(ThemeOverride.effective)
                 .onAppear {
                     viewModel.checkMotionAuthorization()
                 }
@@ -22,13 +23,9 @@ struct AiChingApp: App {
 /// Routes between ritual steps based on ViewModel state.
 struct ContentView: View {
     @ObservedObject var viewModel: RitualViewModel
-    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ZStack {
-            // Background
-            RitualBackgroundView()
-
             // Step router
             Group {
                 switch viewModel.currentStep {
@@ -75,7 +72,7 @@ struct ContentView: View {
                         }) {
                             Image(systemName: "xmark.circle.fill")
                                 .font(.title2)
-                                .foregroundColor(.inkBlack.opacity(0.25))
+                                .foregroundColor(.black.opacity(0.25))
                                 .padding(16)
                         }
                     }
@@ -84,7 +81,7 @@ struct ContentView: View {
             }
         }
         .ignoresSafeArea()
-        .preferredColorScheme(colorScheme)
+        .background(RitualBackground())
     }
 }
 

@@ -24,27 +24,15 @@ extension View {
 // MARK: - Ritual Background
 
 struct RitualBackgroundView: View {
-    @Environment(\.colorScheme) var colorScheme
-
     var body: some View {
-        ZStack {
-            if colorScheme == .dark {
-                Color(red: 0.08, green: 0.06, blue: 0.10)
-                // Subtle silk texture overlay
+        Color.ricePaper
+            .ignoresSafeArea()
+            .overlay(
                 Image(systemName: "circle.grid.cross")
                     .font(.system(size: 200))
-                    .opacity(0.03)
+                    .foregroundColor(.primary.opacity(0.03))
                     .blur(radius: 3)
-            } else {
-                Color(red: 0.97, green: 0.95, blue: 0.90)
-                // Subtle rice paper texture
-                Image(systemName: "circle.grid.cross")
-                    .font(.system(size: 200))
-                    .opacity(0.04)
-                    .blur(radius: 2)
-            }
-        }
-        .ignoresSafeArea()
+            )
     }
 }
 
@@ -125,6 +113,7 @@ struct StepProgressView: View {
                             .stroke(currentStep.rawValue == step ? Color.gold : Color.clear, lineWidth: 1.5)
                     )
             }
+            .padding(.vertical, 2)
         }
     }
 
@@ -132,23 +121,61 @@ struct StepProgressView: View {
         if step < currentStep.rawValue {
             return .gold
         } else if step == currentStep.rawValue {
-            return .gold.opacity(0.7)
+            return .gold
         } else {
-            return .gray.opacity(0.25)
+            return .gray.opacity(0.2)
         }
     }
 }
 
 // MARK: - Color Extensions
 
+// MARK: - Adaptive Colors (Auto Light/Dark via UIColor trait collection)
 extension Color {
-    static let gold = Color(red: 0.83, green: 0.67, blue: 0.22)
-    static let inkBlack = Color(red: 0.12, green: 0.10, blue: 0.08)
-    static let ricePaper = Color(red: 0.97, green: 0.95, blue: 0.90)
-    static let darkSilk = Color(red: 0.08, green: 0.06, blue: 0.10)
-    static let crimson = Color(red: 0.72, green: 0.15, blue: 0.12)
-    static let movingGold = Color(red: 0.90, green: 0.73, blue: 0.30)
-    static let jade = Color(red: 0.25, green: 0.51, blue: 0.43)
+    /// Warm text color: near-black in light, warm white in dark
+    static let inkBlack = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.92, green: 0.90, blue: 0.85, alpha: 1)
+        : UIColor(red: 0.12, green: 0.10, blue: 0.08, alpha: 1) })
+
+    /// Background: warm rice paper in light, dark warm charcoal in dark
+    static let ricePaper = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.08, green: 0.075, blue: 0.07, alpha: 1)
+        : UIColor(red: 0.97, green: 0.95, blue: 0.90, alpha: 1) })
+
+    /// Elevated surface
+    static let surfaceWhite = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.14, green: 0.13, blue: 0.12, alpha: 1)
+        : UIColor(red: 0.99, green: 0.98, blue: 0.95, alpha: 1) })
+
+    /// Gold accent — works in both modes (adjust brightness in dark)
+    static let gold = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.82, green: 0.68, blue: 0.32, alpha: 1)
+        : UIColor(red: 0.75, green: 0.58, blue: 0.20, alpha: 1) })
+
+    /// Dark silk (replaced by adaptive)
+    static let darkSilk = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.12, green: 0.11, blue: 0.10, alpha: 1)
+        : UIColor(red: 0.08, green: 0.06, blue: 0.10, alpha: 1) })
+
+    /// Crimson — slightly brighter in dark for legibility
+    static let crimson = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.85, green: 0.28, blue: 0.20, alpha: 1)
+        : UIColor(red: 0.72, green: 0.15, blue: 0.12, alpha: 1) })
+
+    /// Moving gold (used for changing lines) — bright enough in both modes
+    static let movingGold = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.90, green: 0.75, blue: 0.35, alpha: 1)
+        : UIColor(red: 0.85, green: 0.68, blue: 0.25, alpha: 1) })
+
+    /// Jade — brighter in dark
+    static let jade = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(red: 0.38, green: 0.68, blue: 0.52, alpha: 1)
+        : UIColor(red: 0.25, green: 0.51, blue: 0.43, alpha: 1) })
+
+    /// Divider
+    static let inkDivider = Color(UIColor { $0.userInterfaceStyle == .dark
+        ? UIColor(white: 0.20, alpha: 0.6)
+        : UIColor(white: 0.75, alpha: 0.4) })
 }
 
 // MARK: - Section Divider
@@ -156,7 +183,7 @@ extension Color {
 struct RitualDivider: View {
     var body: some View {
         Rectangle()
-            .fill(Color.gold.opacity(0.4))
+            .fill(Color.inkDivider)
             .frame(height: 1)
             .padding(.horizontal)
     }
@@ -168,7 +195,7 @@ struct CalligraphyTitle: ViewModifier {
     func body(content: Content) -> some View {
         content
             .font(.system(.title2, design: .serif).weight(.semibold))
-            .foregroundColor(.inkBlack)
+            .foregroundColor(.primary)
     }
 }
 
