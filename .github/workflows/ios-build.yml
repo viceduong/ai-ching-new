@@ -23,15 +23,15 @@ jobs:
           brew install xcodegen
           xcodegen --version
 
-      - name: Generate Xcode Project
+      - name: Generate Xcode Project (pre-compat mode)
         run: |
           cd ios
-          # Generate with format compatible with Xcode 15
-          xcodegen generate --spec project.yml --use-project-version 15.0
+          xcodegen --version
+          xcodegen generate --spec project.yml
           echo "Generated Xcode project:"
           ls -la AiChing.xcodeproj/
-          # Verify format version
-          python3 -c "import plistlib; p=plistlib.load(open('AiChing.xcodeproj/project.pbxproj','rb')); print('Format:', p.get('archiveVersion','unknown'))"
+          # Show project format
+          head -3 AiChing.xcodeproj/project.pbxproj
 
       - name: Build iOS App
         run: |
@@ -85,7 +85,7 @@ jobs:
       - name: Setup Swift
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: "5.9"
+          swift-version: "5.10"
 
       - name: Build AiChingCore
         run: |
