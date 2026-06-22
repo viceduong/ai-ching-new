@@ -33,26 +33,40 @@ jobs:
           # Show project format
           head -3 AiChing.xcodeproj/project.pbxproj
 
-      - name: Build iOS App
+      - name: Build iOS App (device)
         run: |
           cd ios
           xcodebuild \
             -project AiChing.xcodeproj \
             -scheme AiChing \
-            -destination 'generic/platform=iOS Simulator' \
+            -destination 'generic/platform=iOS' \
             -configuration Debug \
             clean build \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGNING_ALLOWED=NO \
+            PRODUCT_BUNDLE_IDENTIFIER=com.aiching.app
+          echo "BUILD_PATH=" >> $GITHUB_ENV
+          echo "BUILD_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name '*.app' -type d -path '*/Debug-iphoneos/*' | head -1)" >> $GITHUB_ENV
 
-      - name: Upload Build Artifacts
+      - name: Package .ipa
+        run: |
+          APP_PATH="${{ env.BUILD_PATH }}"
+          echo "App at: $APP_PATH"
+          ls -la "$APP_PATH/"
+          PAYLOAD_DIR="Payload"
+          mkdir -p "$PAYLOAD_DIR"
+          cp -R "$APP_PATH" "$PAYLOAD_DIR/"
+          zip -r AiChing.ipa "$PAYLOAD_DIR"/
+          ls -la AiChing.ipa
+
+      - name: Upload .ipa
         uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: AiChing-build
-          path: ~/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
-          retention-days: 3
+          name: AiChing-ipa
+          path: AiChing.ipa
+          retention-days: 7
 
   build-core:
     name: Build AiChingCore (Cross-Platform)
