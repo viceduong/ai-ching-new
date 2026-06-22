@@ -1,276 +1,355 @@
 import SwiftUI
 
-// MARK: - Design System
-/// App Store-quality design tokens for AiChing.
-/// Inspired by Headspace (calm meditation), Day One (journaling), and classical sumi-e aesthetics.
-enum DS {
+// MARK: - Theme Manager (Persistent Dark/Light Toggle)
+/// Use ThemeManager.shared.isDark to read/write the override.
+/// Falls back to system color scheme when no override is set.
+final class ThemeManager: ObservableObject {
+    static let shared = ThemeManager()
 
-    // MARK: - Colors
-    enum Color {
-        static let ink        = SwiftUI.Color(red: 0.08, green: 0.07, blue: 0.06)
-        static let inkLight   = SwiftUI.Color(red: 0.20, green: 0.18, blue: 0.16)
-        static let inkFaded   = SwiftUI.Color(red: 0.45, green: 0.42, blue: 0.38)
-        static let ricePaper  = SwiftUI.Color(red: 0.97, green: 0.95, blue: 0.90)
-        static let ricePaperDark = SwiftUI.Color(red: 0.12, green: 0.11, blue: 0.09)
-        static let gold       = SwiftUI.Color(red: 0.78, green: 0.62, blue: 0.24)
-        static let goldLight  = SwiftUI.Color(red: 0.90, green: 0.78, blue: 0.40)
-        static let goldDark   = SwiftUI.Color(red: 0.55, green: 0.42, blue: 0.12)
-        static let jade       = SwiftUI.Color(red: 0.25, green: 0.51, blue: 0.43)
-        static let jadeLight  = SwiftUI.Color(red: 0.40, green: 0.70, blue: 0.55)
-        static let crimson    = SwiftUI.Color(red: 0.72, green: 0.15, blue: 0.12)
-        static let vermillion = SwiftUI.Color(red: 0.85, green: 0.30, blue: 0.15)
-        static let silk       = SwiftUI.Color(red: 0.92, green: 0.88, blue: 0.82)
-        static let silkDark   = SwiftUI.Color(red: 0.18, green: 0.16, blue: 0.14)
-        static let surface    = SwiftUI.Color(red: 0.99, green: 0.98, blue: 0.95)
-        static let surfaceDark = SwiftUI.Color(red: 0.10, green: 0.09, blue: 0.08)
+    @AppStorage("theme_override") private var storedTheme: String = "system"
+    @Published var isDark: Bool = false
+
+    private init() {
+        sync()
     }
 
-    // MARK: - Typography
-    enum Font {
-        /// Serif font for Chinese characters and ceremonial text
-        static func serif(_ size: CGFloat = 17, weight: SwiftUI.Font.Weight = .regular) -> SwiftUI.Font {
-            .system(size: size, weight: weight, design: .serif)
-        }
-        /// Monospace for hash/seed display
-        static func mono(_ size: CGFloat = 13) -> SwiftUI.Font {
-            .system(size: size, weight: .regular, design: .monospaced)
-        }
-        /// Display serif for large Chinese characters
-        static func chinese(_ size: CGFloat = 48) -> SwiftUI.Font {
-            .system(size: size, weight: .thin, design: .serif)
+    func setSystem() { storedTheme = "system"; sync() }
+    func setLight()  { storedTheme = "light";  sync() }
+    func setDark()   { storedTheme = "dark";   sync() }
+
+    var effective: UIUserInterfaceStyle {
+        switch storedTheme {
+        case "dark":  return .dark
+        case "light": return .light
+        default:      return .unspecified
         }
     }
 
-    // MARK: - Spacing
-    enum Spacing {
-        static let xs: CGFloat   = 4
-        static let sm: CGFloat   = 8
-        static let md: CGFloat   = 16
-        static let lg: CGFloat   = 24
-        static let xl: CGFloat   = 32
-        static let xxl: CGFloat  = 48
-        static let section: CGFloat = 40
-    }
+    var isOverride: Bool { storedTheme != "system" }
 
-    // MARK: - Corner Radius
-    enum Radius {
-        static let sm: CGFloat  = 4
-        static let md: CGFloat  = 8
-        static let lg: CGFloat  = 16
-        static let pill: CGFloat = 999
+    private func sync() {
+        switch storedTheme {
+        case "dark":  isDark = true
+        case "light": isDark = false
+        default:      isDark = UITraitCollection.current.userInterfaceStyle == .dark
+        }
     }
+}
+
+// MARK: - Semantic Colors (Adaptive)
+/// All colors adapt to dark/light mode automatically via Color("name") asset catalog
+/// or via manual switching. We use the Environment-based approach.
+enum Theme {
+
+    // MARK: - Backgrounds
+    static let background = AdaptiveColor(
+        light: Color(red: 0.96, green: 0.94, blue: 0.89),   // warm rice paper
+        dark: Color(red: 0.08, green: 0.075, blue: 0.07)     // deep warm charcoal
+    )
+    static let surface = AdaptiveColor(
+        light: Color(red: 0.99, green: 0.98, blue: 0.95),   // off-white
+        dark: Color(red: 0.13, green: 0.12, blue: 0.11)      // lifted dark
+    )
+    static let surfaceElevated = AdaptiveColor(
+        light: Color(red: 1.0, green: 1.0, blue: 1.0),       // white
+        dark: Color(red: 0.18, green: 0.17, blue: 0.16)       // elevated dark
+    )
+
+    // MARK: - Text
+    static let text = AdaptiveColor(
+        light: Color(red: 0.10, green: 0.08, blue: 0.06),    // warm near-black
+        dark: Color(red: 0.92, green: 0.90, blue: 0.85)       // warm white
+    )
+    static let textSecondary = AdaptiveColor(
+        light: Color(red: 0.40, green: 0.38, blue: 0.34),
+        dark: Color(red: 0.70, green: 0.68, blue: 0.63)
+    )
+    static let textTertiary = AdaptiveColor(
+        light: Color(red: 0.55, green: 0.53, blue: 0.49),
+        dark: Color(red: 0.55, green: 0.53, blue: 0.49)
+    )
+
+    // MARK: - Accents
+    static let gold = AdaptiveColor(
+        light: Color(red: 0.75, green: 0.58, blue: 0.20),
+        dark: Color(red: 0.82, green: 0.68, blue: 0.32)
+    )
+    static let goldDim = AdaptiveColor(
+        light: Color(red: 0.75, green: 0.58, blue: 0.20).opacity(0.6),
+        dark: Color(red: 0.82, green: 0.68, blue: 0.32).opacity(0.7)
+    )
+    static let goldBright = AdaptiveColor(
+        light: Color(red: 0.85, green: 0.72, blue: 0.35),
+        dark: Color(red: 0.90, green: 0.78, blue: 0.45)
+    )
+    static let jade = AdaptiveColor(
+        light: Color(red: 0.22, green: 0.48, blue: 0.38),
+        dark: Color(red: 0.35, green: 0.65, blue: 0.50)
+    )
+    static let crimson = AdaptiveColor(
+        light: Color(red: 0.70, green: 0.12, blue: 0.10),
+        dark: Color(red: 0.82, green: 0.25, blue: 0.18)
+    )
+
+    // MARK: - Borders / Dividers
+    static let divider = AdaptiveColor(
+        light: Color.black.opacity(0.06),
+        dark: Color.white.opacity(0.08)
+    )
+    static let stroke = AdaptiveColor(
+        light: Color.black.opacity(0.10),
+        dark: Color.white.opacity(0.12)
+    )
 
     // MARK: - Shadows
-    enum Shadow {
-        static let subtle = SwiftUI.Color.black.opacity(0.04)
-        static let soft   = SwiftUI.Color.black.opacity(0.08)
-        static let medium = SwiftUI.Color.black.opacity(0.12)
-
-        static func cardLight() -> some ViewModifier {
-            CardShadowModifier(color: subtle, radius: 8, y: 2)
-        }
-        static func cardDark() -> some ViewModifier {
-            CardShadowModifier(color: medium, radius: 12, y: 3)
-        }
-    }
-
-    // MARK: - Animation
-    enum Anim {
-        static let `default` = SwiftUI.Animation.easeInOut(duration: 0.35)
-        static let spring    = SwiftUI.Animation.spring(response: 0.4, dampingFraction: 0.75)
-        static let slow      = SwiftUI.Animation.easeInOut(duration: 0.6)
-        static let ritual    = SwiftUI.Animation.easeInOut(duration: 1.2)
-    }
+    static let shadow = AdaptiveColor(
+        light: Color.black.opacity(0.06),
+        dark: Color.black.opacity(0.3)
+    )
 }
 
-// MARK: - Shadow Modifier
-struct CardShadowModifier: ViewModifier {
-    let color: SwiftUI.Color
-    let radius: CGFloat
-    let y: CGFloat
+// MARK: - Adaptive Color Wrapper
+struct AdaptiveColor {
+    let light: Color
+    let dark: Color
 
-    func body(content: Content) -> some View {
-        content.shadow(color: color, radius: radius, x: 0, y: y)
-    }
+    func color(_ isDark: Bool) -> Color { isDark ? dark : light }
 }
 
+// MARK: - Convenience View Extension
 extension View {
-    func cardShadow() -> some View {
-        modifier(DS.Shadow.cardLight())
+    func withTheme() -> some View {
+        self.environmentObject(ThemeManager.shared)
     }
+}
+
+// MARK: - Theme Toggle View
+struct ThemeToggleView: View {
+    @EnvironmentObject var theme: ThemeManager
+    @Environment(\.colorScheme) var systemScheme
+
+    var body: some View {
+        Button(action: {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                if theme.isOverride {
+                    theme.setSystem()
+                } else {
+                    theme.setDark()
+                }
+            }
+        }) {
+            Image(systemName: theme.isDark ? "sun.max.fill" : "moon.fill")
+                .font(.system(size: 14))
+                .foregroundColor(Theme.text.color(theme.isDark))
+                .padding(8)
+                .background(
+                    Circle()
+                        .fill(Theme.surface.color(theme.isDark))
+                        .overlay(Circle().stroke(Theme.stroke.color(theme.isDark), lineWidth: 1))
+                )
+        }
+    }
+}
+
+// MARK: - Typography
+enum Fonts {
+    static func serif(_ size: CGFloat = 17, weight: Font.Weight = .regular) -> Font {
+        .system(size: size, weight: weight, design: .serif)
+    }
+    static func mono(_ size: CGFloat = 13) -> Font {
+        .system(size: size, weight: .regular, design: .monospaced)
+    }
+    static func chinese(_ size: CGFloat = 48) -> Font {
+        .system(size: size, weight: .thin, design: .serif)
+    }
+}
+
+// MARK: - Spacing
+enum Gap {
+    static let xs: CGFloat  = 4
+    static let sm: CGFloat  = 8
+    static let md: CGFloat  = 16
+    static let lg: CGFloat  = 24
+    static let xl: CGFloat  = 32
+    static let xxl: CGFloat = 48
+}
+
+// MARK: - Corner Radius
+enum Corner {
+    static let sm: CGFloat  = 6
+    static let md: CGFloat  = 10
+    static let lg: CGFloat  = 16
+    static let pill: CGFloat = 999
 }
 
 // MARK: - Reusable Components
 
-/// Ceremonial step number badge
 struct StepBadge: View {
     let number: Int
     let label: String
+    @Environment(\.colorScheme) var cs
+    @EnvironmentObject var theme: ThemeManager
+    var isDark: Bool { theme.effective == .dark || (theme.effective == .unspecified && cs == .dark) }
 
     var body: some View {
         HStack(spacing: 8) {
             Circle()
-                .fill(DS.Color.gold)
+                .fill(Theme.gold.color(isDark))
                 .frame(width: 24, height: 24)
-                .overlay(Text("\(number)").font(DS.Font.serif(12, weight: .bold)).foregroundColor(.white))
+                .overlay(Text("\(number)").font(Fonts.serif(12, weight: .bold)).foregroundColor(.white))
             Text(label)
-                .font(DS.Font.serif(13))
-                .foregroundColor(DS.Color.inkFaded)
+                .font(Fonts.serif(13))
+                .foregroundColor(Theme.textSecondary.color(isDark))
         }
     }
 }
 
-/// Ink divider — thin gold line
 struct InkDivider: View {
+    @Environment(\.colorScheme) var cs
+    @EnvironmentObject var theme: ThemeManager
+    var isDark: Bool { theme.effective == .dark || (theme.effective == .unspecified && cs == .dark) }
+
     var body: some View {
         Rectangle()
-            .fill(DS.Color.gold.opacity(0.3))
+            .fill(Theme.divider.color(isDark))
             .frame(height: 1)
-            .padding(.horizontal, DS.Spacing.lg)
+            .padding(.horizontal, Gap.lg)
     }
 }
 
-/// Calligraphy title block
 struct SectionTitle: View {
     let chinese: String
     let english: String
     let vietnamese: String?
+    @Environment(\.colorScheme) var cs
+    @EnvironmentObject var theme: ThemeManager
+    var isDark: Bool { theme.effective == .dark || (theme.effective == .unspecified && cs == .dark) }
 
     var body: some View {
         VStack(spacing: 4) {
             Text(chinese)
-                .font(DS.Font.chinese(42))
-                .foregroundColor(DS.Color.ink.opacity(0.5))
+                .font(Fonts.chinese(42))
+                .foregroundColor(Theme.text.color(isDark).opacity(0.5))
             Text(english)
-                .font(DS.Font.serif(22, weight: .light))
-                .foregroundColor(DS.Color.ink.opacity(0.6))
+                .font(Fonts.serif(22, weight: .light))
+                .foregroundColor(Theme.text.color(isDark).opacity(0.6))
             if let vi = vietnamese {
                 Text(vi)
-                    .font(DS.Font.serif(13))
-                    .foregroundColor(DS.Color.gold.opacity(0.7))
+                    .font(Fonts.serif(13))
+                    .foregroundColor(Theme.goldDim.color(isDark))
                     .italic()
             }
         }
     }
 }
 
-/// Primary action button
 struct PrimaryButton: View {
     let title: String
     let subtitle: String?
     let action: () -> Void
-    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorScheme) var cs
+    @EnvironmentObject var theme: ThemeManager
+    var isDark: Bool { theme.effective == .dark || (theme.effective == .unspecified && cs == .dark) }
 
     var body: some View {
         Button(action: action) {
             VStack(spacing: 2) {
                 Text(title)
-                    .font(DS.Font.serif(17, weight: .semibold))
+                    .font(Fonts.serif(17, weight: .semibold))
                 if let sub = subtitle {
                     Text(sub)
-                        .font(DS.Font.serif(12))
+                        .font(Fonts.serif(12))
                         .opacity(0.7)
                 }
             }
             .foregroundColor(.white)
-            .padding(.horizontal, DS.Spacing.xxl)
-            .padding(.vertical, DS.Spacing.md)
+            .padding(.horizontal, Gap.xxl)
+            .padding(.vertical, Gap.md)
             .frame(minWidth: 220)
             .background(
-                RoundedRectangle(cornerRadius: DS.Radius.md, style: .continuous)
-                    .fill(DS.Color.ink)
-                    .shadow(color: DS.Shadow.medium, radius: 8, x: 0, y: 4)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: DS.Radius.md, style: .continuous)
-                    .stroke(DS.Color.gold.opacity(0.2), lineWidth: 0.5)
+                RoundedRectangle(cornerRadius: Corner.md, style: .continuous)
+                    .fill(Theme.text.color(isDark))
+                    .shadow(color: Theme.shadow.color(isDark), radius: 8, x: 0, y: 4)
             )
         }
         .buttonStyle(ScaleButtonStyle())
     }
 }
 
-/// Ghost button (outlined)
-struct GhostButton: View {
-    let title: String
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .font(DS.Font.serif(15))
-                .foregroundColor(DS.Color.inkFaded)
-                .padding(.horizontal, DS.Spacing.lg)
-                .padding(.vertical, DS.Spacing.sm)
-                .background(
-                    RoundedRectangle(cornerRadius: DS.Radius.sm, style: .continuous)
-                        .stroke(DS.Color.ink.opacity(0.15), lineWidth: 1)
-                )
-        }
-    }
-}
-
-/// Language toggle pill
 struct LanguageToggle: View {
     @Binding var isVietnamese: Bool
+    @Environment(\.colorScheme) var cs
+    @EnvironmentObject var theme: ThemeManager
+    var isDark: Bool { theme.effective == .dark || (theme.effective == .unspecified && cs == .dark) }
 
     var body: some View {
         Button(action: {
-            withAnimation(DS.Anim.spring) { isVietnamese.toggle() }
+            withAnimation(.spring(response: 0.3)) { isVietnamese.toggle() }
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
         }) {
             HStack(spacing: 6) {
                 Text("EN")
-                    .font(DS.Font.serif(12, weight: isVietnamese ? .regular : .semibold))
-                    .foregroundColor(isVietnamese ? DS.Color.inkFaded : DS.Color.gold)
+                    .font(Fonts.serif(12, weight: isVietnamese ? .regular : .semibold))
+                    .foregroundColor(isVietnamese ? Theme.textSecondary.color(isDark) : Theme.gold.color(isDark))
                 Text("|")
-                    .font(DS.Font.serif(11))
-                    .foregroundColor(DS.Color.inkFaded.opacity(0.4))
+                    .font(Fonts.serif(11))
+                    .foregroundColor(Theme.textTertiary.color(isDark))
                 Text("VI")
-                    .font(DS.Font.serif(12, weight: isVietnamese ? .semibold : .regular))
-                    .foregroundColor(isVietnamese ? DS.Color.gold : DS.Color.inkFaded)
+                    .font(Fonts.serif(12, weight: isVietnamese ? .semibold : .regular))
+                    .foregroundColor(isVietnamese ? Theme.gold.color(isDark) : Theme.textSecondary.color(isDark))
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
             .background(
-                RoundedRectangle(cornerRadius: DS.Radius.pill, style: .continuous)
-                    .fill(DS.Color.surface)
+                RoundedRectangle(cornerRadius: Corner.pill, style: .continuous)
+                    .fill(Theme.surface.color(isDark))
                     .overlay(
-                        RoundedRectangle(cornerRadius: DS.Radius.pill, style: .continuous)
-                            .stroke(DS.Color.gold.opacity(0.3), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: Corner.pill, style: .continuous)
+                            .stroke(Theme.stroke.color(isDark), lineWidth: 1)
                     )
             )
         }
     }
 }
 
-// MARK: - Background
 struct RitualBackground: View {
-    @Environment(\.colorScheme) var colorScheme
+    @Environment(\.colorScheme) var cs
+    @EnvironmentObject var theme: ThemeManager
+    var isDark: Bool { theme.effective == .dark || (theme.effective == .unspecified && cs == .dark) }
 
     var body: some View {
-        (colorScheme == .dark ? DS.Color.ricePaperDark : DS.Color.ricePaper)
+        Theme.background.color(isDark)
             .ignoresSafeArea()
             .overlay(
                 Image(systemName: "circle.grid.cross")
                     .font(.system(size: 300))
-                    .foregroundColor(colorScheme == .dark ? .white.opacity(0.02) : .black.opacity(0.02))
+                    .foregroundColor(isDark ? .white.opacity(0.02) : .black.opacity(0.02))
                     .blur(radius: 4)
             )
     }
 }
 
-// MARK: - Card
 struct Card<Content: View>: View {
     @ViewBuilder let content: Content
+    @Environment(\.colorScheme) var cs
+    @EnvironmentObject var theme: ThemeManager
+    var isDark: Bool { theme.effective == .dark || (theme.effective == .unspecified && cs == .dark) }
 
     var body: some View {
         content
-            .padding(DS.Spacing.md)
+            .padding(Gap.md)
             .background(
-                RoundedRectangle(cornerRadius: DS.Radius.md, style: .continuous)
-                    .fill(DS.Color.surface)
-                    .shadow(color: DS.Shadow.subtle, radius: 8, x: 0, y: 2)
+                RoundedRectangle(cornerRadius: Corner.md, style: .continuous)
+                    .fill(Theme.surfaceElevated.color(isDark))
+                    .shadow(color: Theme.shadow.color(isDark), radius: 8, x: 0, y: 2)
             )
+    }
+}
+
+struct ScaleButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
+            .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
     }
 }
