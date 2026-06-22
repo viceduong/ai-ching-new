@@ -10,7 +10,7 @@ on:
 jobs:
   build-ios:
     name: Build AiChing (iOS)
-    runs-on: macos-13  # macOS 13 runner with Xcode 15
+    runs-on: macos-12  # older runner, may have better availability
 
     steps:
       - uses: actions/checkout@v4
