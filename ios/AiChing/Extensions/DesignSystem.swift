@@ -14,7 +14,7 @@ enum DS {
         static let ink        = SwiftUI.Color.primary
         static let inkLight   = SwiftUI.Color.primary.opacity(0.8)
         static let inkFaded   = SwiftUI.Color.secondary
-        static let inkVeryFaded = SwiftUI.Color.tertiary
+        static let inkVeryFaded = SwiftUI.Color.secondary.opacity(0.5)
 
         static let background = SwiftUI.Color("background") ?? SwiftUI.Color(.systemBackground)
         static let surface    = SwiftUI.Color("surface") ?? SwiftUI.Color(.secondarySystemBackground)
@@ -27,7 +27,7 @@ enum DS {
         static let jadeLight  = SwiftUI.Color("jadeLight") ?? SwiftUI.Color(red: 0.35, green: 0.65, blue: 0.50)
         static let crimson    = SwiftUI.Color("crimson") ?? SwiftUI.Color(red: 0.70, green: 0.12, blue: 0.10)
         static let vermillion = SwiftUI.Color("vermillion") ?? SwiftUI.Color(red: 0.80, green: 0.25, blue: 0.15)
-        static let divider    = SwiftUI.Color("divider") ?? SwiftUI.Color.separator
+        static let divider    = SwiftUI.Color("divider") ?? SwiftUI.Color.gray.opacity(0.2)
     }
 
     // MARK: - Typography
