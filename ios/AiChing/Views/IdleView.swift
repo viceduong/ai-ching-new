@@ -105,6 +105,7 @@ struct IdleView: View {
                 }
                 .padding(.top, 8)
             }
+            .padding(.bottom, 60)
         }
         .ritualBackground()
         .sheet(isPresented: $showHistory) {
