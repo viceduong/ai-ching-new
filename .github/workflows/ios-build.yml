@@ -68,48 +68,5 @@ jobs:
           path: AiChing.ipa
           retention-days: 7
 
-  build-core:
-    name: Build AiChingCore (Cross-Platform)
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-14, ubuntu-latest]  # Windows included if Swift available
-        # os: [macos-14, ubuntu-latest, windows-latest]
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Build AiChingCore
-        run: |
-          cd ios/AiChingCore
-          swift build
-
-      - name: Test AiChingCore
-        run: |
-          cd ios/AiChingCore
-          swift test 2>&1
-        continue-on-error: ${{ matrix.os != 'macos-14' }}
-
-  build-windows-swift:
-    name: Build on Windows (Swift)
-    runs-on: windows-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Swift
-        uses: compnerd/gha-setup-swift@main
-        with:
-          swift-version: "5.9"
-
-      - name: Build AiChingCore
-        run: |
-          cd ios/AiChingCore
-          swift build
-        shell: pwsh
-
-      - name: Test AiChingCore
-        run: |
-          cd ios/AiChingCore
-          swift test
-        shell: pwsh
+  # Removed build-core and build-windows-swift jobs to reduce runner demand.
+  # Run them manually via `aich test` or `swift build` in the AiChingCore package.
