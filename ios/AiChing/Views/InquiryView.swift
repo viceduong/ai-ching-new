@@ -13,50 +13,85 @@ struct InquiryView: View {
         VStack(spacing: 0) {
             StepBadge(number: 2, label: t(L.Step.inquiry, vi))
                 .padding(.top, 60)
-                .padding(.bottom, DS.Spacing.sm)
 
             VStack(spacing: DS.Spacing.sm) {
                 Text(t(L.Inquiry.instruction, vi))
-                    .font(DS.Font.serif(15))
+                    .font(DS.Font.serif(14))
                     .foregroundColor(DS.Color.ink.opacity(0.7))
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, DS.Spacing.xl)
+                    .padding(.top, DS.Spacing.sm)
             }
-            .padding(.horizontal, DS.Spacing.xl)
-            .padding(.bottom, DS.Spacing.sm)
 
-            
+            Spacer()
 
-            // Text input
+            // Scroll-like parchment text area
             VStack(spacing: DS.Spacing.sm) {
-                TextEditor(text: $viewModel.questionText)
-                    .font(DS.Font.serif(16))
-                    .foregroundColor(DS.Color.ink)
-                    .hideScrollBackground()
-                    .frame(minHeight: 80, maxHeight: 130)
-                    .padding(DS.Spacing.sm)
-                    .background(
-                        RoundedRectangle(cornerRadius: DS.Radius.sm, style: .continuous)
-                            .fill(DS.Color.surface)
-                            .cardShadow()
-                    )
-                    .focused($isFocused)
-                    .onChange(of: viewModel.questionText) { newValue in
-                        if newValue.count > maxChars {
-                            viewModel.questionText = String(newValue.prefix(maxChars))
-                        }
-                        viewModel.registerKeystroke(character: String(newValue.last ?? " "))
+                // Decorative scroll top
+                HStack(spacing: 6) {
+                    Rectangle().fill(DS.Color.gold.opacity(0.4)).frame(height: 1)
+                    TrigramView(lines: [true, true, true], width: 18, isHighlighted: true)
+                    Rectangle().fill(DS.Color.gold.opacity(0.4)).frame(height: 1)
+                }
+
+                // Text input area with calligraphy styling
+                ZStack(alignment: .topLeading) {
+                    if viewModel.questionText.isEmpty {
+                        Text(t(L.Inquiry.placeholder, vi))
+                            .font(DS.Font.serif(15, weight: .light))
+                            .foregroundColor(DS.Color.inkFaded.opacity(0.5))
+                            .italic()
+                            .padding(.top, 12)
+                            .padding(.leading, 8)
                     }
+
+                    TextEditor(text: $viewModel.questionText)
+                        .font(DS.Font.serif(18, weight: .light))
+                        .foregroundColor(DS.Color.ink)
+                        .hideScrollBackground()
+                        .frame(minHeight: 120, maxHeight: 180)
+                        .padding(8)
+                        .focused($isFocused)
+                        .onChange(of: viewModel.questionText) { newValue in
+                            if newValue.count > maxChars {
+                                viewModel.questionText = String(newValue.prefix(maxChars))
+                            }
+                            viewModel.registerKeystroke(character: String(newValue.last ?? " "))
+                        }
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(DS.Color.surfaceElevated)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(DS.Color.gold.opacity(0.2), lineWidth: 0.5)
+                        )
+                        .shadow(color: .black.opacity(0.04), radius: 3, x: 0, y: 1)
+                )
+
+                // Decorative scroll bottom
+                HStack(spacing: 6) {
+                    Rectangle().fill(DS.Color.gold.opacity(0.4)).frame(height: 1)
+                    SealStampView(text: "問", size: 18)
+                    Rectangle().fill(DS.Color.gold.opacity(0.4)).frame(height: 1)
+                }
 
                 HStack {
                     Text("\(viewModel.questionText.count)/\(maxChars)")
-                        .font(DS.Font.mono(12))
-                        .foregroundColor(viewModel.questionText.count < 5 ? DS.Color.crimson.opacity(0.6) : DS.Color.jade)
+                        .font(DS.Font.mono(11))
+                        .foregroundColor(viewModel.questionText.count < 5
+                            ? DS.Color.crimson.opacity(0.6)
+                            : DS.Color.jade)
                     Spacer()
                     if viewModel.questionText.count < 5 {
                         Text(t(L.Inquiry.minChars, vi))
-                            .font(DS.Font.serif(11))
+                            .font(DS.Font.serif(10))
                             .foregroundColor(DS.Color.crimson.opacity(0.6))
+                    } else {
+                        Text("✓ \(vi ? "Sẵn sàng" : "Ready")")
+                            .font(DS.Font.serif(10))
+                            .foregroundColor(DS.Color.jade)
                     }
                 }
                 .padding(.horizontal, 4)
@@ -65,16 +100,18 @@ struct InquiryView: View {
 
             Spacer()
 
+            // Continue button
             PrimaryButton(
                 title: t(L.Inquiry.next, vi),
-                subtitle: viewModel.questionText.count >= 5 ? nil : t(L.Inquiry.minChars, vi)
+                subtitle: nil
             ) {
                 isFocused = false
                 withAnimation(DS.Anim.default) { viewModel.submitQuestion() }
             }
             .disabled(viewModel.questionText.count < 5)
             .opacity(viewModel.questionText.count >= 5 ? 1 : 0.5)
-            .padding(.bottom, DS.Spacing.md)
+
+            Spacer().frame(height: 40)
         }
         .background(RitualBackground())
         .onTapGesture { isFocused = false }

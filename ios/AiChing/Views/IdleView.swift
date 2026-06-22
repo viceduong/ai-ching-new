@@ -1,113 +1,105 @@
 import SwiftUI
 
-// MARK: - Step 0: Idle / Welcome Screen
-/// Entry point of the ritual. A calm, meditative landing page.
+// MARK: - Idle / Welcome Screen
 struct IdleView: View {
     @ObservedObject var viewModel: RitualViewModel
-    @State private var brushPulse: CGFloat = 1.0
-    @State private var showHistory = false
+    @AppStorage("lang_vi") var isVietnamese = false
+    @State private var rotation: Double = 0
+    @State private var outerRotation: Double = 0
+
+    var vi: Bool { isVietnamese }
 
     var body: some View {
         VStack(spacing: 0) {
+            Spacer().frame(height: 30)
+
+            // Chinese title
+            Text("易 經")
+                .font(DS.Font.chinese(56))
+                .foregroundColor(DS.Color.ink.opacity(0.6))
+                .tracking(8)
+
+            Text("AiChing")
+                .font(DS.Font.serif(28, weight: .light))
+                .foregroundColor(DS.Color.ink.opacity(0.7))
+                .padding(.top, 2)
+
+            Text(vi ? "Kinh Dịch — Sách của những biến đổi" : "The Book of Changes")
+                .font(DS.Font.serif(13, weight: .light))
+                .foregroundColor(DS.Color.inkFaded)
+                .italic()
+                .padding(.top, 2)
+
             Spacer()
 
-            // Title
-            VStack(spacing: 4) {
-                Text("易 經")
-                    .font(.system(size: 56, weight: .thin))
-                    .foregroundColor(.inkBlack)
-                    .opacity(0.6)
-
-                Text("AiChing")
-                    .font(.system(.largeTitle, design: .serif))
-                    .fontWeight(.light)
-                    .foregroundColor(.inkBlack)
-
-                Text("The Book of Changes")
-                    .font(.system(.subheadline, design: .serif))
-                    .foregroundColor(.inkBlack.opacity(0.5))
-                    .italic()
-            }
-
-            Spacer()
-
-            // Central ink-brush circle
+            // Centerpiece: Yin-Yang with rotating Bagua
             ZStack {
+                // Bagua compass (outer, rotating)
+                BaguaCompass(size: 260)
+                    .rotationEffect(.degrees(outerRotation))
+                    .opacity(0.4)
+
+                // Outer ring
                 Circle()
-                    .stroke(Color.gold.opacity(0.2), lineWidth: 1)
+                    .stroke(DS.Color.gold.opacity(0.25), lineWidth: 1)
+                    .frame(width: 200, height: 200)
+
+                // Inner ring
+                Circle()
+                    .stroke(DS.Color.gold.opacity(0.15), lineWidth: 1)
                     .frame(width: 160, height: 160)
 
-                Circle()
-                    .stroke(Color.gold.opacity(0.4), lineWidth: 1.5)
-                    .frame(width: 130, height: 130)
-                    .scaleEffect(brushPulse)
-
-                // Ink brush circle
-                Circle()
-                    .fill(Color.inkBlack)
-                    .frame(width: 100, height: 100)
-                    .scaleEffect(brushPulse)
-                    .opacity(0.85)
-
-                // Gold inner ring
-                Circle()
-                    .stroke(Color.gold.opacity(0.5), lineWidth: 1)
-                    .frame(width: 70, height: 70)
-                    .scaleEffect(1.0 + 0.1 * sin(Date().timeIntervalSince1970 * 1.5))
+                // Yin-Yang (rotating)
+                YinYangView(size: 100)
+                    .rotationEffect(.degrees(rotation))
+                    .shadow(color: DS.Color.ink.opacity(0.15), radius: 8, x: 0, y: 4)
             }
-            .onAppear {
-                withAnimation(.easeInOut(duration: 3).repeatForever(autoreverses: true)) {
-                    brushPulse = 1.03
-                }
-            }
+            .frame(width: 280, height: 280)
 
             Spacer()
 
             // Begin button
-            Button(action: {
-                withAnimation(.easeInOut(duration: 0.4)) {
-                    viewModel.beginRitual()
-                }
-            }) {
-                Text("Begin Reading")
-                    .font(.system(.headline, design: .serif))
-                    .foregroundColor(.ricePaper)
-                    .padding(.horizontal, 48)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(Color.inkBlack)
-                            .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 4)
-                            .stroke(Color.gold.opacity(0.3), lineWidth: 0.5)
-                    )
+            PrimaryButton(
+                title: t(L.Idle.begin, vi),
+                subtitle: vi ? "Bắt đầu hành trình" : "Begin your journey"
+            ) {
+                withAnimation(.easeInOut(duration: 0.4)) { viewModel.beginRitual() }
             }
-            .buttonStyle(ScaleButtonStyle())
 
-            Spacer()
+            Spacer().frame(height: 20)
 
-            // Footer
-            VStack(spacing: 4) {
-                Text("古老的智慧 现代的启示")
-                    .font(.system(.caption, design: .serif))
-                    .foregroundColor(.inkBlack.opacity(0.4))
-
-                Button(action: { showHistory = true }) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "book.closed")
-                            .font(.caption)
-                        Text("Reading History")
-                            .font(.system(.caption, design: .serif))
-                    }
-                    .foregroundColor(.gold.opacity(0.7))
-                }
-                .padding(.top, 8)
-            }
-            .padding(.bottom, 60)
+            // History link
+            HistoryLink()
+                .padding(.bottom, DS.Spacing.lg)
         }
-        .ritualBackground()
+        .background(RitualBackground())
+        .onAppear {
+            withAnimation(.easeInOut(duration: 12).repeatForever(autoreverses: false)) {
+                outerRotation = 360
+            }
+            withAnimation(.easeInOut(duration: 8).repeatForever(autoreverses: false)) {
+                rotation = 360
+            }
+        }
+    }
+}
+
+// MARK: - History Link
+struct HistoryLink: View {
+    @ObservedObject var viewModel: RitualViewModel
+    @State private var showHistory = false
+    @AppStorage("lang_vi") var isVietnamese = false
+
+    var body: some View {
+        Button(action: { showHistory = true }) {
+            HStack(spacing: 6) {
+                Image(systemName: "book.closed")
+                    .font(.caption)
+                Text(vi ? "Lịch sử quẻ" : "Reading History")
+                    .font(DS.Font.serif(13))
+            }
+            .foregroundColor(DS.Color.gold.opacity(0.7))
+        }
         .sheet(isPresented: $showHistory) {
             JournalView(viewModel: viewModel)
         }
