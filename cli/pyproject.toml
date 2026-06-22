@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aich"
+version = "0.1.0"
+description = "AiChing CLI — trigger iOS builds, check status, download artifacts, run tests"
+requires-python = ">=3.8"
+authors = [
+    {name = "AiChing"},
+]
+
+[project.scripts]
+aich = "aich.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

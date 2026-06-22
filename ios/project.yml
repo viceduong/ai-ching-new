@@ -1,0 +1,29 @@
+name: AiChing
+options:
+  bundleIdPrefix: com.aiching
+  deploymentTarget:
+    iOS: "15.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: false
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    TARGETED_DEVICE_FAMILY: "1"
+    CODE_SIGN_STYLE: Automatic
+
+targets:
+  AiChing:
+    type: application
+    platform: iOS
+    sources:
+      - AiChing
+    info:
+      path: AiChing/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.aiching.app
+        INFOPLIST_FILE: AiChing/Info.plist
+        IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+    dependencies: []

@@ -1,0 +1,2 @@
+[console_scripts]
+aich = aich.cli:main
