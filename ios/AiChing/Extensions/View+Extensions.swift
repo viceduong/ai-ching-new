@@ -176,4 +176,15 @@ extension View {
     func calligraphyTitle() -> some View {
         modifier(CalligraphyTitle())
     }
+
+    /// Hides scrollable content background (TextEditor etc).
+    /// iOS 15: uses UITextView appearance; iOS 16+: uses native API.
+    func hideScrollBackground() -> some View {
+        if #available(iOS 16.0, *) {
+            return AnyView(self.scrollContentBackground(.hidden))
+        } else {
+            UITextView.appearance().backgroundColor = .clear
+            return AnyView(self)
+        }
+    }
 }

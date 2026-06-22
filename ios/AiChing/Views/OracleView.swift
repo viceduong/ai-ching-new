@@ -201,22 +201,19 @@ struct OracleView: View {
 
                 // Lines (top to bottom)
                 VStack(spacing: 8) {
-                    ForEach((0..<6).reversed(), id: \.self) { i in
+                    ForEach(Array((0..<6).reversed()), id: \.self) { i in
                         let idx = 5 - i
                         let val = isSecondary ? nil : data.lineValues[safe: idx]
-                        let isYang: Bool
-                        let isMoving: Bool
-                        if let v = val {
-                            isYang = v == .youngYang || v == .oldYang
-                            isMoving = v == .oldYin || v == .oldYang
-                        } else {
-                            isYang = h.lines[idx] == .yang
-                            isMoving = false
-                        }
+                        let info: (yang: Bool, moving: Bool) = {
+                            if let v = val {
+                                return (v == .youngYang || v == .oldYang, v == .oldYin || v == .oldYang)
+                            }
+                            return (h.lines[idx] == .yang, false)
+                        }()
                         HexagramLineView(
-                            isYang: isYang,
-                            isMoving: isMoving,
-                            color: isMoving ? DS.Color.gold : (isSecondary ? DS.Color.gold.opacity(0.6) : DS.Color.ink),
+                            isYang: info.yang,
+                            isMoving: info.moving,
+                            color: info.moving ? DS.Color.gold : (isSecondary ? DS.Color.gold.opacity(0.6) : DS.Color.ink),
                             animated: !isSecondary,
                             width: 100
                         )
@@ -272,7 +269,8 @@ struct OracleView: View {
 
     // MARK: - Moving Line Card
     func movingLineCard(position: Int, text: String, value: LineValue) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        let analysis = vi ? lineAnalysisVi(position: position, value: value) : lineAnalysisEn(position: position, value: value)
+        return VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Circle().fill(DS.Color.crimson).frame(width: 6, height: 6)
                 Text("\(t(L.Oracle.changingLines, vi)) \(position + 1)")
