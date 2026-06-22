@@ -38,14 +38,18 @@ private func sha256(_ data: Data) -> Data {
         compress(&h, block)
     }
     var out = Data(capacity: 32)
-    withUnsafeBytes(of: h.h0) { out.append($0.reversed()) }
-    withUnsafeBytes(of: h.h1) { out.append($0.reversed()) }
-    withUnsafeBytes(of: h.h2) { out.append($0.reversed()) }
-    withUnsafeBytes(of: h.h3) { out.append($0.reversed()) }
-    withUnsafeBytes(of: h.h4) { out.append($0.reversed()) }
-    withUnsafeBytes(of: h.h5) { out.append($0.reversed()) }
-    withUnsafeBytes(of: h.h6) { out.append($0.reversed()) }
-    withUnsafeBytes(of: h.h7) { out.append($0.reversed()) }
+    func appendBE(_ val: UInt32) {
+        var big = val.bigEndian
+        withUnsafeBytes(of: &big) { out.append(contentsOf: $0) }
+    }
+    appendBE(h.h0)
+    appendBE(h.h1)
+    appendBE(h.h2)
+    appendBE(h.h3)
+    appendBE(h.h4)
+    appendBE(h.h5)
+    appendBE(h.h6)
+    appendBE(h.h7)
     return out
 }
 
@@ -127,7 +131,6 @@ private func compress(_ state: inout SHA256State, _ block: [UInt8]) {
 private func rotateRight(_ x: UInt32, _ n: UInt32) -> UInt32 {
     (x >> n) | (x << (32 - n))
 }
-#endif
 
 // MARK: - Entropy Payload
 /// Data structure for all entropy sources collected during the ritual.
