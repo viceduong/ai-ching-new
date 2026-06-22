@@ -12,17 +12,15 @@ struct SettingsDrawer: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Dimmed backdrop
-            if isOpen {
-                Color.black.opacity(0.3)
-                    .ignoresSafeArea()
-                    .onTapGesture { withAnimation(.easeOut(duration: 0.25)) { isOpen = false } }
-                    .transition(.opacity)
-            }
+            // Dimmed backdrop (always present, opacity toggles)
+            Color.black.opacity(isOpen ? 0.3 : 0)
+                .ignoresSafeArea()
+                .onTapGesture { withAnimation(.easeOut(duration: 0.25)) { isOpen = false } }
+                .animation(.easeOut(duration: 0.25), value: isOpen)
 
             // Drawer panel
-            if isOpen {
-                VStack(spacing: 0) {
+            VStack(spacing: 0) {
+                if isOpen {
                     // Handle
                     RoundedRectangle(cornerRadius: 2.5)
                         .fill(Color.gray.opacity(0.4))
@@ -33,7 +31,6 @@ struct SettingsDrawer: View {
                     Text("Settings".uppercased())
                         .font(DS.Font.serif(12, weight: .semibold))
                         .foregroundColor(DS.Color.inkFaded)
-                        .tracking(2)
                         .padding(.bottom, DS.Spacing.md)
 
                     // Language
@@ -77,19 +74,18 @@ struct SettingsDrawer: View {
 
                     Spacer().frame(height: DS.Spacing.lg)
                 }
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .fill(cs == .dark ? Color(red: 0.12, green: 0.11, blue: 0.10) : Color(red: 0.99, green: 0.98, blue: 0.95))
-                        .shadow(color: .black.opacity(0.15), radius: 20, x: 0, y: -5)
-                )
-                .transition(.move(edge: .bottom).combined(with: .opacity))
-                .padding(.horizontal, 8)
-                .padding(.bottom, 8)
             }
+            .frame(maxWidth: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(cs == .dark ? Color(red: 0.12, green: 0.11, blue: 0.10) : Color(red: 0.99, green: 0.98, blue: 0.95))
+                    .shadow(color: .black.opacity(0.15), radius: 20, x: 0, y: -5)
+            )
+            .offset(y: isOpen ? 0 : 400)
+            .animation(.easeOut(duration: 0.3), value: isOpen)
         }
-        .animation(.easeOut(duration: 0.3), value: isOpen)
         .ignoresSafeArea(edges: .bottom)
+        .animation(.easeOut(duration: 0.3), value: isOpen)
     }
 
     func themeButton(_ label: String, icon: String, key: String) -> some View {
