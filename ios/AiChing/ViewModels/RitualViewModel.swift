@@ -178,7 +178,7 @@ final class RitualViewModel: ObservableObject {
         }
     }
 
-    private func completeHold() {
+    func completeHold() {
         holdTimer?.invalidate()
         holdTimer = nil
         isHolding = false
