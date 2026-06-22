@@ -17,11 +17,11 @@ struct SplitsView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
-                StepBadge(number: 3, label: L.Step.splits.text(vi))
+                StepBadge(number: 3, label: t(L.Step.splits, vi))
                     .padding(.top, DS.Spacing.md)
 
                 VStack(spacing: DS.Spacing.sm) {
-                    Text(L.Splits.instruction.text(vi))
+                    Text(t(L.Splits.instruction, vi))
                         .font(DS.Font.serif(15))
                         .foregroundColor(DS.Color.ink.opacity(0.7))
                         .multilineTextAlignment(.center)
@@ -31,7 +31,7 @@ struct SplitsView: View {
                 .padding(.top, DS.Spacing.md)
 
                 // Line counter
-                Text("\(L.Splits.line.text(vi)) \(viewModel.currentSplitIndex + 1) \(L.Splits.of.text(vi)) 6")
+                Text("\(t(L.Splits.line, vi)) \(viewModel.currentSplitIndex + 1) \(t(L.Splits.of, vi)) 6")
                     .font(DS.Font.serif(16, weight: .semibold))
                     .foregroundColor(DS.Color.gold)
                     .padding(.top, DS.Spacing.lg)
@@ -117,7 +117,7 @@ struct SplitsView: View {
                 }
                 .padding(.bottom, DS.Spacing.sm)
 
-                Text(L.Splits.hint.text(vi))
+                Text(t(L.Splits.hint, vi))
                     .font(DS.Font.serif(12))
                     .foregroundColor(DS.Color.inkFaded.opacity(0.4))
                     .padding(.bottom, DS.Spacing.md)

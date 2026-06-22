@@ -17,10 +17,10 @@ struct OracleView: View {
             VStack(spacing: 0) {
                 // Header
                 VStack(spacing: 4) {
-                    Text(L.Oracle.title.text(vi))
+                    Text(t(L.Oracle.title, vi))
                         .font(DS.Font.serif(24, weight: .light))
                         .foregroundColor(DS.Color.ink.opacity(0.7))
-                    Text(L.Step.oracleSub.text(vi))
+                    Text(t(L.Step.oracleSub, vi))
                         .font(DS.Font.serif(13))
                         .foregroundColor(DS.Color.inkFaded)
                         .italic()
@@ -38,7 +38,7 @@ struct OracleView: View {
                     // Question card
                     Card {
                         VStack(spacing: 8) {
-                            Text(L.Oracle.yourQuestion.text(vi))
+                            Text(t(L.Oracle.yourQuestion, vi))
                                 .font(DS.Font.serif(12))
                                 .foregroundColor(DS.Color.inkFaded)
                             Text("\"\(viewModel.questionText)\"")
@@ -69,7 +69,7 @@ struct OracleView: View {
                                 Image(systemName: "arrow.triangle.swap")
                                     .font(.caption)
                                     .foregroundColor(DS.Color.gold)
-                                Text(L.Oracle.changingTo.text(vi))
+                                Text(t(L.Oracle.changingTo, vi))
                                     .font(DS.Font.serif(15, weight: .semibold))
                                     .foregroundColor(DS.Color.inkFaded)
                             }
@@ -85,7 +85,7 @@ struct OracleView: View {
                             .padding(.vertical, DS.Spacing.lg)
 
                         VStack(alignment: .leading, spacing: DS.Spacing.md) {
-                            Text(L.Oracle.changingLines.text(vi))
+                            Text(t(L.Oracle.changingLines, vi))
                                 .font(DS.Font.serif(18, weight: .semibold))
                                 .foregroundColor(DS.Color.crimson)
                                 .padding(.horizontal, DS.Spacing.lg)
@@ -112,7 +112,7 @@ struct OracleView: View {
 
                     // Seed hash
                     HStack {
-                        Text("\(L.Oracle.seed.text(vi)):")
+                        Text("\(t(L.Oracle.seed, vi)):")
                             .font(DS.Font.mono(11))
                             .foregroundColor(DS.Color.inkFaded.opacity(0.4))
                         Text(viewModel.hashHex.prefix(16) + "...")
@@ -126,7 +126,7 @@ struct OracleView: View {
                 HStack(spacing: DS.Spacing.xl) {
                     actionButton(
                         icon: showSaveConfirmation ? "checkmark.circle.fill" : "bookmark",
-                        label: showSaveConfirmation ? L.Oracle.saved.text(vi) : L.Oracle.save.text(vi),
+                        label: showSaveConfirmation ? t(L.Oracle.saved, vi) : t(L.Oracle.save, vi),
                         color: showSaveConfirmation ? DS.Color.jade : DS.Color.inkFaded
                     ) {
                         viewModel.saveReading()
@@ -136,7 +136,7 @@ struct OracleView: View {
 
                     actionButton(
                         icon: "square.and.arrow.up",
-                        label: L.Oracle.share.text(vi),
+                        label: t(L.Oracle.share, vi),
                         color: DS.Color.inkFaded
                     ) {
                         shareContent = viewModel.shareText()
@@ -145,7 +145,7 @@ struct OracleView: View {
 
                     actionButton(
                         icon: "plus.circle",
-                        label: L.Oracle.newReading.text(vi),
+                        label: t(L.Oracle.newReading, vi),
                         color: DS.Color.gold
                     ) {
                         withAnimation(DS.Anim.default) { viewModel.resetRitual() }
@@ -154,7 +154,7 @@ struct OracleView: View {
                 .padding(.vertical, DS.Spacing.xl)
 
                 // Footer
-                Text(L.App.footer.text(vi))
+                Text(t(L.App.footer, vi))
                     .font(DS.Font.serif(11))
                     .foregroundColor(DS.Color.inkFaded.opacity(0.3))
                     .padding(.bottom, DS.Spacing.xl)
@@ -233,7 +233,7 @@ struct OracleView: View {
 
                 // Judgment
                 VStack(spacing: 8) {
-                    Text(L.Oracle.judgment.text(vi))
+                    Text(t(L.Oracle.judgment, vi))
                         .font(DS.Font.serif(13, weight: .semibold))
                         .foregroundColor(DS.Color.inkFaded)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -251,7 +251,7 @@ struct OracleView: View {
 
                 // Image
                 VStack(spacing: 8) {
-                    Text(L.Oracle.image.text(vi))
+                    Text(t(L.Oracle.image, vi))
                         .font(DS.Font.serif(13, weight: .semibold))
                         .foregroundColor(DS.Color.inkFaded)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -273,9 +273,10 @@ struct OracleView: View {
 
     // MARK: - Moving Line Card
     func movingLineCard(position: Int, text: String, value: LineValue) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Circle().fill(DS.Color.crimson).frame(width: 6, height: 6)
-                Text("\(L.Oracle.changingLines.text(vi)) \(position + 1)")
+                Text("\(t(L.Oracle.changingLines, vi)) \(position + 1)")
                     .font(DS.Font.serif(14, weight: .semibold))
                     .foregroundColor(DS.Color.crimson)
                 Spacer()
@@ -310,7 +311,7 @@ struct OracleView: View {
     // MARK: - Interpretation Section
     func interpretationSection(hex: Hexagram, data: OracleDisplayData) -> some View {
         VStack(alignment: .leading, spacing: DS.Spacing.md) {
-            Text(L.Oracle.interpretation.text(vi))
+            Text(t(L.Oracle.interpretation, vi))
                 .font(DS.Font.serif(18, weight: .semibold))
                 .foregroundColor(DS.Color.ink)
                 .padding(.horizontal, DS.Spacing.lg)

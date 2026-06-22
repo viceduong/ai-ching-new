@@ -1,0 +1,2 @@
+ 386: d=1 
+ 387: d=2 if !data.movingLineTexts.isEmpty {

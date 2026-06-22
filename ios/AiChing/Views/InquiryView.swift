@@ -11,11 +11,11 @@ struct InquiryView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            StepBadge(number: 2, label: L.Step.inquiry.text(vi))
+            StepBadge(number: 2, label: t(L.Step.inquiry, vi))
                 .padding(.top, DS.Spacing.md)
 
             VStack(spacing: DS.Spacing.sm) {
-                Text(L.Inquiry.instruction.text(vi))
+                Text(t(L.Inquiry.instruction, vi))
                     .font(DS.Font.serif(15))
                     .foregroundColor(DS.Color.ink.opacity(0.7))
                     .multilineTextAlignment(.center)
@@ -28,16 +28,16 @@ struct InquiryView: View {
 
             // Examples
             VStack(alignment: .leading, spacing: DS.Spacing.sm) {
-                Text(L.Inquiry.examples.text(vi))
+                Text(t(L.Inquiry.examples, vi))
                     .font(DS.Font.serif(12, weight: .semibold))
                     .foregroundColor(DS.Color.inkFaded)
 
                 ForEach([L.Inquiry.ex1, L.Inquiry.ex2, L.Inquiry.ex3], id: \.en) { ex in
                     Button(action: {
-                        viewModel.questionText = ex.text(vi)
-                        viewModel.registerKeystroke(character: String(ex.text(vi).last ?? " "))
+                        viewModel.questionText = t(ex, vi)
+                        viewModel.registerKeystroke(character: String(t(ex, vi).last ?? " "))
                     }) {
-                        Text(ex.text(vi))
+                        Text(t(ex, vi))
                             .font(DS.Font.serif(13))
                             .foregroundColor(DS.Color.gold)
                             .lineLimit(1)
@@ -75,7 +75,7 @@ struct InquiryView: View {
                         .foregroundColor(viewModel.questionText.count < 5 ? DS.Color.crimson.opacity(0.6) : DS.Color.jade)
                     Spacer()
                     if viewModel.questionText.count < 5 {
-                        Text(L.Inquiry.minChars.text(vi))
+                        Text(t(L.Inquiry.minChars, vi))
                             .font(DS.Font.serif(11))
                             .foregroundColor(DS.Color.crimson.opacity(0.6))
                     }
@@ -87,8 +87,8 @@ struct InquiryView: View {
             Spacer()
 
             PrimaryButton(
-                title: L.Inquiry.next.text(vi),
-                subtitle: viewModel.questionText.count >= 5 ? nil : L.Inquiry.minChars.text(vi)
+                title: t(L.Inquiry.next, vi),
+                subtitle: viewModel.questionText.count >= 5 ? nil : t(L.Inquiry.minChars, vi)
             ) {
                 isFocused = false
                 withAnimation(DS.Anim.default) { viewModel.submitQuestion() }

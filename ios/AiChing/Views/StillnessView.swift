@@ -10,12 +10,12 @@ struct StillnessView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            StepBadge(number: 1, label: L.Step.stillness.text(vi))
+            StepBadge(number: 1, label: t(L.Step.stillness, vi))
                 .padding(.top, DS.Spacing.md)
 
             // Instruction
             VStack(spacing: DS.Spacing.sm) {
-                Text(L.Stillness.instruction.text(vi))
+                Text(t(L.Stillness.instruction, vi))
                     .font(DS.Font.serif(16))
                     .foregroundColor(DS.Color.ink.opacity(0.7))
                     .multilineTextAlignment(.center)
@@ -91,7 +91,7 @@ struct StillnessView: View {
 
             // Status text
             if viewModel.holdFailed {
-                Text(L.Stillness.tooSoon.text(vi))
+                Text(t(L.Stillness.tooSoon, vi))
                     .font(DS.Font.serif(14))
                     .foregroundColor(DS.Color.crimson)
                     .padding(.top, DS.Spacing.lg)
@@ -104,7 +104,7 @@ struct StillnessView: View {
 
             Spacer()
 
-            Text(L.Stillness.hint.text(vi))
+            Text(t(L.Stillness.hint, vi))
                 .font(DS.Font.serif(12))
                 .foregroundColor(DS.Color.inkFaded.opacity(0.4))
                 .multilineTextAlignment(.center)

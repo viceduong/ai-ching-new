@@ -121,11 +121,8 @@ enum L {
     }
 }
 
-/// Add .text(_:) to all String tuple pairs used for bilingual strings.
-typealias LString = (String, String)
-extension LString {
-    func text(_ vi: Bool) -> String { vi ? self.1 : self.0 }
-}
+/// Helper for bilingual string display.
+func txt(_ pair: (String, String), _ vi: Bool) -> String { vi ? pair.1 : pair.0 }
 
 struct Localized {
     let en: String

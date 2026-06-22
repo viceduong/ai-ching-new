@@ -16,11 +16,11 @@ struct OverrideView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            StepBadge(number: 5, label: L.Step.override.text(vi))
+            StepBadge(number: 5, label: t(L.Step.override, vi))
                 .padding(.top, DS.Spacing.md)
 
             VStack(spacing: DS.Spacing.sm) {
-                Text(L.Override.instruction.text(vi))
+                Text(t(L.Override.instruction, vi))
                     .font(DS.Font.serif(14))
                     .foregroundColor(DS.Color.ink.opacity(0.7))
                     .multilineTextAlignment(.center)
@@ -57,7 +57,7 @@ struct OverrideView: View {
 
                 if let result = viewModel.computedResult, result.hasMovingLines {
                     VStack(spacing: 4) {
-                        Text(L.Override.forming.text(vi))
+                        Text(t(L.Override.forming, vi))
                             .font(DS.Font.serif(12))
                             .foregroundColor(DS.Color.inkFaded)
                         if let secondaryIdx = result.secondaryIndex {
@@ -71,7 +71,7 @@ struct OverrideView: View {
             }
 
             PrimaryButton(
-                title: L.Override.accept.text(vi),
+                title: t(L.Override.accept, vi),
                 subtitle: nil
             ) {
                 withAnimation(DS.Anim.default) { viewModel.acceptOracle() }
