@@ -218,6 +218,13 @@ struct Card<Content: View>: View {
     }
 }
 
+// MARK: - View Extensions
+extension View {
+    func cardShadow() -> some View {
+        self.shadow(color: DS.Shadow.subtle, radius: 8, x: 0, y: 2)
+    }
+}
+
 struct ScaleButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
