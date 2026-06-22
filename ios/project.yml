@@ -3,7 +3,8 @@ options:
   bundleIdPrefix: com.aiching
   deploymentTarget:
     iOS: "15.0"
-  xcodeVersion: "15.0"
+  xcodeVersion: "14.0"
+  createIntermediateGroups: false
   generateEmptyDirectories: false
   groupSortPosition: top
 

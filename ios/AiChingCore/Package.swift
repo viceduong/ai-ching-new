@@ -14,16 +14,12 @@ let package = Package(
             targets: ["AiChingCore"]
         ),
     ],
-    dependencies: [
-        // On non-Apple platforms, use swift-crypto instead of CryptoKit
-        // .package(url: "https://github.com/apple/swift-crypto.git", from: "3.0.0"),
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "AiChingCore",
-            dependencies: [
-                // "Crypto"  // uncomment for non-Apple platforms
-            ],
+            dependencies: [],
+            exclude: [],
             resources: [
                 .process("Resources/hexagrams.json"),
             ]

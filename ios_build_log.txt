@@ -1,0 +1,30 @@
+ 2026-06-22T06:21:23.1166530Z ##[group]Run cd ios
+2026-06-22T06:21:23.1166970Z [36;1mcd ios[0m
+2026-06-22T06:21:23.1167150Z [36;1mxcodebuild \[0m
+2026-06-22T06:21:23.1167780Z [36;1m  -project AiChing.xcodeproj \[0m
+2026-06-22T06:21:23.1168080Z [36;1m  -scheme AiChing \[0m
+2026-06-22T06:21:23.1168380Z [36;1m  -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.5' \[0m
+2026-06-22T06:21:23.1169750Z [36;1m  -configuration Debug \[0m
+2026-06-22T06:21:23.1169980Z [36;1m  clean build \[0m
+2026-06-22T06:21:23.1170190Z [36;1m  CODE_SIGN_IDENTITY="" \[0m
+2026-06-22T06:21:23.1170440Z [36;1m  CODE_SIGNING_REQUIRED=NO \[0m
+2026-06-22T06:21:23.1170690Z [36;1m  CODE_SIGNING_ALLOWED=NO[0m
+2026-06-22T06:21:23.1246660Z shell: /bin/bash -e {0}
+2026-06-22T06:21:23.1246980Z ##[endgroup]
+2026-06-22T06:21:24.1322390Z Command line invocation:
+2026-06-22T06:21:24.1326520Z     /Applications/Xcode_15.4.app/Contents/Developer/usr/bin/xcodebuild -project AiChing.xcodeproj -scheme AiChing -destination "platform=iOS Simulator,name=iPhone 15,OS=17.5" -configuration Debug clean build CODE_SIGN_IDENTITY= CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+2026-06-22T06:21:24.1331250Z 
+2026-06-22T06:21:24.1333550Z User defaults from command line:
+2026-06-22T06:21:24.1338600Z     IDEPackageSupportUseBuiltinSCM = YES
+2026-06-22T06:21:24.1339560Z 
+2026-06-22T06:21:24.1341190Z Build settings from command line:
+2026-06-22T06:21:24.1341920Z     CODE_SIGN_IDENTITY = 
+2026-06-22T06:21:24.1342200Z     CODE_SIGNING_ALLOWED = NO
+2026-06-22T06:21:24.1342410Z     CODE_SIGNING_REQUIRED = NO
+2026-06-22T06:21:24.1342560Z 
+2026-06-22T06:21:25.3861410Z 2026-06-22 06:21:25.385 xcodebuild[1670:7504] Writing error result bundle to /var/folders/dq/2t71w9pd3jx50vh3kp15_dt40000gn/T/ResultBundle_2026-22-06_06-21-0025.xcresult
+2026-06-22T06:21:26.9908320Z xcodebuild: error: Unable to read project 'AiChing.xcodeproj'.
+2026-06-22T06:21:26.9920840Z 	Reason: The project  AiChing  cannot be opened because it is in a future Xcode project file format (77). Adjust the project format using a compatible version of Xcode to allow it to be opened by this version of Xcode.
+2026-06-22T06:21:26.9922930Z 
+2026-06-22T06:21:26.9923430Z 
+2026-06-22T06:21:27.0046270Z ##[error]Process completed with exit code 74.

@@ -8,47 +8,124 @@ protocol HashFunction {
     static func hash(data: Data) -> Data
 }
 
+/// Platform hash function: uses CryptoKit on Apple platforms,
+/// pure Swift SHA-256 elsewhere. Always produces correct SHA-256.
+enum PlatformHash: HashFunction {
+    static func hash(data: Data) -> Data {
+        #if canImport(CryptoKit)
+        CryptoKitSHA256(data)
+        #else
+        sha256(data)
+        #endif
+    }
+}
+
 #if canImport(CryptoKit)
 import CryptoKit
-
-enum PlatformHash: HashFunction {
-    static func hash(data: Data) -> Data {
-        Data(SHA256.hash(data: data))
-    }
+private func CryptoKitSHA256(_ data: Data) -> Data {
+    Data(SHA256.hash(data: data))
 }
-#elseif canImport(Crypto)
-import Crypto
+#endif
 
-enum PlatformHash: HashFunction {
-    static func hash(data: Data) -> Data {
-        Data(SHA256.hash(data: data))
+// MARK: - Pure Swift SHA-256
+
+private func sha256(_ data: Data) -> Data {
+    let bytes = [UInt8](data)
+    let msg = pad(bytes)
+    var h = SHA256State()
+    for i in stride(from: 0, to: msg.count, by: 64) {
+        let block = Array(msg[i..<min(i+64, msg.count)])
+        compress(&h, block)
     }
+    var out = Data(capacity: 32)
+    withUnsafeBytes(of: h.h0) { out.append($0.reversed()) }
+    withUnsafeBytes(of: h.h1) { out.append($0.reversed()) }
+    withUnsafeBytes(of: h.h2) { out.append($0.reversed()) }
+    withUnsafeBytes(of: h.h3) { out.append($0.reversed()) }
+    withUnsafeBytes(of: h.h4) { out.append($0.reversed()) }
+    withUnsafeBytes(of: h.h5) { out.append($0.reversed()) }
+    withUnsafeBytes(of: h.h6) { out.append($0.reversed()) }
+    withUnsafeBytes(of: h.h7) { out.append($0.reversed()) }
+    return out
 }
-#else
-/// Cross-platform fallback. In production, add swift-crypto dependency.
-/// This produces deterministic output suitable for testing / UI previews
-/// but is NOT cryptographically secure.
-enum PlatformHash: HashFunction {
-    static func hash(data: Data) -> Data {
-        // Deterministic pseudo-hash that preserves Yarrow distribution.
-        // Maps input bytes to 32-byte output via mixing.
-        let bytes = [UInt8](data)
-        var output = [UInt8](repeating: 0, count: 32)
-        guard !bytes.isEmpty else { return Data(output) }
 
-        // Simple mixing: XOR with rotated self
-        for i in 0..<min(32, bytes.count) {
-            output[i] = bytes[i] ^ bytes[bytes.count - 1 - i]
-        }
-        // Fill remaining bytes with combined input hash
-        if bytes.count < 32 {
-            let seed = bytes.reduce(0) { $0 &+ $1 }
-            for i in bytes.count..<32 {
-                output[i] = seed &+ UInt8(i &* 37)
-            }
-        }
-        return Data(output)
+private struct SHA256State {
+    var h0: UInt32 = 0x6a09e667
+    var h1: UInt32 = 0xbb67ae85
+    var h2: UInt32 = 0x3c6ef372
+    var h3: UInt32 = 0xa54ff53a
+    var h4: UInt32 = 0x510e527f
+    var h5: UInt32 = 0x9b05688c
+    var h6: UInt32 = 0x1f83d9ab
+    var h7: UInt32 = 0x5be0cd19
+}
+
+private let K: [UInt32] = [
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
+    0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+    0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
+    0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+    0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc,
+    0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
+    0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+    0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
+    0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+    0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3,
+    0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5,
+    0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+    0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+    0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+]
+
+private func pad(_ input: [UInt8]) -> [UInt8] {
+    var msg = input
+    let len = UInt64(msg.count * 8)
+    msg.append(0x80)
+    while (msg.count % 64) != 56 {
+        msg.append(0x00)
     }
+    withUnsafeBytes(of: len.bigEndian) { msg.append(contentsOf: $0) }
+    return msg
+}
+
+private func compress(_ state: inout SHA256State, _ block: [UInt8]) {
+    var W = [UInt32](repeating: 0, count: 64)
+    for t in 0..<16 {
+        let i = t * 4
+        W[t] = (UInt32(block[i]) << 24) | (UInt32(block[i+1]) << 16) | (UInt32(block[i+2]) << 8) | UInt32(block[i+3])
+    }
+    for t in 16..<64 {
+        let s0 = rotateRight(W[t-15], 7) ^ rotateRight(W[t-15], 18) ^ (W[t-15] >> 3)
+        let s1 = rotateRight(W[t-2], 17) ^ rotateRight(W[t-2], 19) ^ (W[t-2] >> 10)
+        W[t] = W[t-16] &+ s0 &+ W[t-7] &+ s1
+    }
+
+    var a = state.h0, b = state.h1, c = state.h2, d = state.h3
+    var e = state.h4, f = state.h5, g = state.h6, h = state.h7
+
+    for t in 0..<64 {
+        let S1 = rotateRight(e, 6) ^ rotateRight(e, 11) ^ rotateRight(e, 25)
+        let ch = (e & f) ^ (~e & g)
+        let temp1 = h &+ S1 &+ ch &+ K[t] &+ W[t]
+        let S0 = rotateRight(a, 2) ^ rotateRight(a, 13) ^ rotateRight(a, 22)
+        let maj = (a & b) ^ (a & c) ^ (b & c)
+        let temp2 = S0 &+ maj
+
+        h = g; g = f; f = e; e = d &+ temp1
+        d = c; c = b; b = a; a = temp1 &+ temp2
+    }
+
+    state.h0 = state.h0 &+ a; state.h1 = state.h1 &+ b
+    state.h2 = state.h2 &+ c; state.h3 = state.h3 &+ d
+    state.h4 = state.h4 &+ e; state.h5 = state.h5 &+ f
+    state.h6 = state.h6 &+ g; state.h7 = state.h7 &+ h
+}
+
+@inline(__always)
+private func rotateRight(_ x: UInt32, _ n: UInt32) -> UInt32 {
+    (x >> n) | (x << (32 - n))
 }
 #endif
 
