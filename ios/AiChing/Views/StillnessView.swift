@@ -65,7 +65,7 @@ struct StillnessView: View {
                     ? "\(Int(viewModel.holdProgress * 100))%"
                     : (vi ? "Giữ" : "Hold"))
                     .font(DS.Font.serif(20, weight: .light))
-                    .foregroundColor(viewModel.holdProgress > 0.5 ? DS.Color.ricePaper : DS.Color.ink)
+                    .foregroundColor(viewModel.holdProgress > 0.5 ? Color.white : DS.Color.ink)
             }
             .gesture(
                 DragGesture(minimumDistance: 0)
