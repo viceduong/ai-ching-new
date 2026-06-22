@@ -1,87 +1,61 @@
 import SwiftUI
 
-// MARK: - Step 1: Stillness (Intention Anchor)
-/// User must long-press a pulsing circle for 4–7 seconds.
-/// Premature release resets with haptic rejection.
+// MARK: - Step 1: Stillness
 struct StillnessView: View {
     @ObservedObject var viewModel: RitualViewModel
     @State private var pulseAnimation = false
-    @State private var inkSpread: CGFloat = 0.0
+    @State private var isVietnamese = false
 
-    // Minimum hold time before release is allowed
-    private let minHoldDuration: Double = 4.0
+    var vi: Bool { isVietnamese }
 
     var body: some View {
         VStack(spacing: 0) {
-            // Step indicator
-            StepProgressView(currentStep: .stillness)
-                .padding(.top, 16)
-                .padding(.bottom, 8)
-
-            // Title
-            Text("静 心")
-                .font(.system(.title, design: .serif))
-                .fontWeight(.light)
-                .foregroundColor(.inkBlack)
-                .opacity(0.7)
-
-            Text("Stillness")
-                .font(.system(.subheadline, design: .serif))
-                .foregroundColor(.inkBlack.opacity(0.4))
-                .italic()
-
-            Spacer()
+            StepBadge(number: 1, label: L.Step.stillness.text(vi))
+                .padding(.top, DS.Spacing.md)
 
             // Instruction
-            Text("Hold the circle until it fills completely.\nLet your mind settle.")
-                .font(.system(.body, design: .serif))
-                .foregroundColor(.inkBlack.opacity(0.6))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 32)
+            VStack(spacing: DS.Spacing.sm) {
+                Text(L.Stillness.instruction.text(vi))
+                    .font(DS.Font.serif(16))
+                    .foregroundColor(DS.Color.ink.opacity(0.7))
+                    .multilineTextAlignment(.center)
+
+                LanguageToggle(isVietnamese: $isVietnamese)
+            }
+            .padding(.horizontal, DS.Spacing.xl)
+            .padding(.top, DS.Spacing.lg)
 
             Spacer()
 
-            // Pulse circle — long press target
+            // Hold circle
             ZStack {
-                // Outer glow ring
+                // Outer ring
                 Circle()
-                    .stroke(
-                        LinearGradient(
-                            colors: [.gold.opacity(0.3), .gold.opacity(0.1)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        lineWidth: 1.5
-                    )
-                    .frame(width: 200, height: 200)
+                    .stroke(DS.Color.gold.opacity(0.2), lineWidth: 1)
+                    .frame(width: 220, height: 220)
                     .scaleEffect(pulseAnimation ? 1.05 : 1.0)
 
-                // Ink fill circle
+                // Progress ring
                 Circle()
                     .trim(from: 0, to: viewModel.holdProgress)
                     .stroke(
-                        LinearGradient(
-                            colors: [.inkBlack, .inkBlack.opacity(0.5)],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ),
+                        LinearGradient(colors: [DS.Color.gold, DS.Color.goldLight],
+                                       startPoint: .top, endPoint: .bottom),
                         style: StrokeStyle(lineWidth: 3, lineCap: .round)
                     )
-                    .frame(width: 180, height: 180)
+                    .frame(width: 200, height: 200)
                     .rotationEffect(.degrees(-90))
 
-                // Ink pool (the hold target)
+                // Ink pool
                 Circle()
                     .fill(
                         RadialGradient(
                             colors: [
-                                .inkBlack.opacity(0.3 + 0.5 * viewModel.holdProgress),
-                                .inkBlack.opacity(0.1 + 0.2 * viewModel.holdProgress),
+                                DS.Color.ink.opacity(0.15 + 0.6 * viewModel.holdProgress),
+                                DS.Color.ink.opacity(0.05 + 0.2 * viewModel.holdProgress),
                                 .clear,
                             ],
-                            center: .center,
-                            startRadius: 0,
-                            endRadius: 100
+                            center: .center, startRadius: 10, endRadius: 100
                         )
                     )
                     .frame(width: 160, height: 160)
@@ -89,9 +63,9 @@ struct StillnessView: View {
                 // Center text
                 Text(viewModel.holdProgress > 0
                     ? "\(Int(viewModel.holdProgress * 100))%"
-                    : "Hold")
-                    .font(.system(.title3, design: .serif))
-                    .foregroundColor(viewModel.holdProgress > 0.5 ? .ricePaper : .inkBlack)
+                    : (vi ? "Giữ" : "Hold"))
+                    .font(DS.Font.serif(20, weight: .light))
+                    .foregroundColor(viewModel.holdProgress > 0.5 ? DS.Color.ricePaper : DS.Color.ink)
             }
             .gesture(
                 DragGesture(minimumDistance: 0)
@@ -107,53 +81,36 @@ struct StillnessView: View {
                     .onEnded { _ in
                         pulseAnimation = false
                         let elapsed = Date().timeIntervalSince(viewModel.holdStartTime ?? Date())
-                        if elapsed < minHoldDuration {
+                        if elapsed < 4.0 {
                             viewModel.cancelHold()
                         } else {
                             viewModel.completeHold()
                         }
                     }
             )
-            .simultaneousGesture(
-                // Allow tap to start as alternative
-                LongPressGesture(minimumDuration: minHoldDuration)
-                    .onChanged { _ in
-                        if !viewModel.isHolding {
-                            viewModel.beginHold(at: .zero, force: 0.5)
-                        }
-                    }
-                    .onEnded { _ in
-                        pulseAnimation = false
-                    }
-            )
 
-            // Hold progress text
-            if viewModel.holdProgress > 0 {
-                Text("\(Int(viewModel.holdTargetDuration - Date().timeIntervalSince(viewModel.holdStartTime ?? Date())))s remaining")
-                    .font(.system(.caption, design: .monospaced))
-                    .foregroundColor(.inkBlack.opacity(0.4))
-                    .padding(.top, 16)
+            // Status text
+            if viewModel.holdFailed {
+                Text(L.Stillness.tooSoon.text(vi))
+                    .font(DS.Font.serif(14))
+                    .foregroundColor(DS.Color.crimson)
+                    .padding(.top, DS.Spacing.lg)
+            } else if viewModel.holdProgress > 0 {
+                Text("\(Int(viewModel.holdTargetDuration - Date().timeIntervalSince(viewModel.holdStartTime ?? Date())))s")
+                    .font(DS.Font.mono(14))
+                    .foregroundColor(DS.Color.inkFaded)
+                    .padding(.top, DS.Spacing.md)
             }
 
             Spacer()
 
-            // Hint
-            Text("时长随机 4–7 秒 · 不可催促")
-                .font(.system(.caption2, design: .serif))
-                .foregroundColor(.inkBlack.opacity(0.3))
-                .padding(.bottom, 8)
+            Text(L.Stillness.hint.text(vi))
+                .font(DS.Font.serif(12))
+                .foregroundColor(DS.Color.inkFaded.opacity(0.4))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, DS.Spacing.xl)
+                .padding(.bottom, DS.Spacing.md)
         }
-        .ritualBackground()
-        .onAppear {
-            viewModel.holdFailed = false
-            viewModel.holdProgress = 0.0
-        }
-    }
-}
-
-// MARK: - Preview
-struct StillnessView_Previews: PreviewProvider {
-    static var previews: some View {
-        StillnessView(viewModel: RitualViewModel.preview)
+        .background(RitualBackground())
     }
 }

@@ -1,359 +1,433 @@
 import SwiftUI
 
-// MARK: - Step 6: The Oracle (Revelation)
-/// Displays the complete reading: primary hexagram, secondary, moving line texts.
-/// Scrollable book-like layout with save and share actions.
+// MARK: - Oracle View — Complete Rewrite with Bilingual Analysis
 struct OracleView: View {
     @ObservedObject var viewModel: RitualViewModel
     @Environment(\.colorScheme) var colorScheme
-
+    @State private var isVietnamese = false
     @State private var showSaveConfirmation = false
     @State private var showShareSheet = false
-    @State private var shareContent = ""
     @State private var animateContent = false
+    @Environment(\.localePreference) var localePref
+
+    var vi: Bool { isVietnamese }
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 0) {
-                // Step indicator (complete)
-                StepProgressView(currentStep: .oracle)
-                    .padding(.top, 16)
-                    .padding(.bottom, 4)
+                // Header
+                VStack(spacing: 4) {
+                    Text(L.Oracle.title.text(vi))
+                        .font(DS.Font.serif(24, weight: .light))
+                        .foregroundColor(DS.Color.ink.opacity(0.7))
+                    Text(L.Step.oracleSub.text(vi))
+                        .font(DS.Font.serif(13))
+                        .foregroundColor(DS.Color.inkFaded)
+                        .italic()
+                }
+                .padding(.top, DS.Spacing.lg)
+                .opacity(animateContent ? 1 : 0)
+                .offset(y: animateContent ? 0 : 10)
 
-                // Title
-                Text("启 示")
-                    .font(.system(.title, design: .serif))
-                    .fontWeight(.light)
-                    .foregroundColor(.inkBlack)
-                    .opacity(0.7)
-
-                Text("The Oracle")
-                    .font(.system(.subheadline, design: .serif))
-                    .foregroundColor(.inkBlack.opacity(0.4))
-                    .italic()
+                // Language toggle
+                LanguageToggle(isVietnamese: $isVietnamese)
+                    .padding(.top, DS.Spacing.sm)
+                    .opacity(animateContent ? 1 : 0)
 
                 if let data = viewModel.oracleData {
-                    // Question
-                    VStack(spacing: 4) {
-                        Text("Your Question")
-                            .font(.system(.caption, design: .serif))
-                            .foregroundColor(.inkBlack.opacity(0.4))
-
-                        Text("\"\(viewModel.questionText)\"")
-                            .font(.system(.body, design: .serif))
-                            .italic()
-                            .foregroundColor(.inkBlack.opacity(0.7))
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 24)
+                    // Question card
+                    Card {
+                        VStack(spacing: 8) {
+                            Text(L.Oracle.yourQuestion.text(vi))
+                                .font(DS.Font.serif(12))
+                                .foregroundColor(DS.Color.inkFaded)
+                            Text("\"\(viewModel.questionText)\"")
+                                .font(DS.Font.serif(17))
+                                .italic()
+                                .foregroundColor(DS.Color.ink)
+                                .multilineTextAlignment(.center)
+                        }
                     }
-                    .padding(.top, 16)
+                    .padding(.horizontal, DS.Spacing.lg)
+                    .padding(.top, DS.Spacing.md)
                     .opacity(animateContent ? 1 : 0)
-                    .offset(y: animateContent ? 0 : 10)
-
-                    // Divider
-                    RitualDivider()
-                        .padding(.vertical, 16)
-                        .opacity(animateContent ? 1 : 0)
 
                     // Primary Hexagram
-                    HexagramDisplayView(
-                        hexagram: data.primaryHexagram,
-                        index: data.primaryIndex,
-                        isSecondary: false,
-                        lineValues: data.lineValues,
-                        movingPositions: data.movingLinePositions
-                    )
-                    .opacity(animateContent ? 1 : 0)
-                    .offset(y: animateContent ? 0 : 15)
+                    InkDivider()
+                        .padding(.vertical, DS.Spacing.lg)
+                        .opacity(animateContent ? 1 : 0)
 
-                    // Secondary Hexagram (if exists)
-                    if let secondaryHex = data.secondaryHexagram,
-                       let secondaryIdx = data.secondaryIndex {
-                        RitualDivider()
-                            .padding(.vertical, 16)
+                    hexagramAnalysis(data: data, isSecondary: false)
 
-                        VStack(spacing: 8) {
+                    // Secondary hexagram
+                    if let secondaryIdx = data.secondaryIndex {
+                        InkDivider()
+                            .padding(.vertical, DS.Spacing.lg)
+
+                        VStack(spacing: 12) {
                             HStack {
                                 Image(systemName: "arrow.triangle.swap")
                                     .font(.caption)
-                                    .foregroundColor(.gold)
-                                Text("Changing to")
-                                    .font(.system(.caption, design: .serif))
-                                    .foregroundColor(.inkBlack.opacity(0.5))
+                                    .foregroundColor(DS.Color.gold)
+                                Text(L.Oracle.changingTo.text(vi))
+                                    .font(DS.Font.serif(15, weight: .semibold))
+                                    .foregroundColor(DS.Color.inkFaded)
                             }
+                            .opacity(animateContent ? 1 : 0)
 
-                            HexagramDisplayView(
-                                hexagram: secondaryHex,
-                                index: secondaryIdx,
-                                isSecondary: true,
-                                lineValues: nil,
-                                movingPositions: []
-                            )
+                            hexagramAnalysis(data: data, isSecondary: true)
                         }
-                        .opacity(animateContent ? 1 : 0)
-                        .offset(y: animateContent ? 0 : 10)
                     }
 
-                    // Moving Line Texts
+                    // Changing Lines
                     if !data.movingLineTexts.isEmpty {
-                        RitualDivider()
-                            .padding(.vertical, 16)
+                        InkDivider()
+                            .padding(.vertical, DS.Spacing.lg)
 
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("Changing Lines")
-                                .font(.system(.headline, design: .serif))
-                                .foregroundColor(.movingGold)
-                                .padding(.horizontal, 24)
+                        VStack(alignment: .leading, spacing: DS.Spacing.md) {
+                            Text(L.Oracle.changingLines.text(vi))
+                                .font(DS.Font.serif(18, weight: .semibold))
+                                .foregroundColor(DS.Color.crimson)
+                                .padding(.horizontal, DS.Spacing.lg)
 
                             ForEach(data.movingLineTexts, id: \.position) { lineText in
-                                MovingLineCard(
+                                movingLineCard(
                                     position: lineText.position,
                                     text: lineText.text,
-                                    lineValue: data.lineValues[safe: lineText.position] ?? .oldYang
+                                    value: data.lineValues[safe: lineText.position] ?? .oldYang
                                 )
                             }
                         }
-                        .padding(.bottom, 8)
                         .opacity(animateContent ? 1 : 0)
-                        .offset(y: animateContent ? 0 : 10)
                     }
 
-                    // Hash seed
+                    // Interpretation section
+                    if let hex = data.primaryHexagram {
+                        InkDivider()
+                            .padding(.vertical, DS.Spacing.lg)
+
+                        interpretationSection(hex: hex, data: data)
+                            .opacity(animateContent ? 1 : 0)
+                    }
+
+                    // Seed hash
                     HStack {
-                        Text("Seed:")
-                            .font(.system(.caption2, design: .serif))
-                            .foregroundColor(.inkBlack.opacity(0.3))
-
+                        Text("\(L.Oracle.seed.text(vi)):")
+                            .font(DS.Font.mono(11))
+                            .foregroundColor(DS.Color.inkFaded.opacity(0.4))
                         Text(viewModel.hashHex.prefix(16) + "...")
-                            .font(.system(.caption2, design: .monospaced))
-                            .foregroundColor(.inkBlack.opacity(0.25))
+                            .font(DS.Font.mono(11))
+                            .foregroundColor(DS.Color.inkFaded.opacity(0.3))
                     }
-                    .padding(.top, 8)
-                    .opacity(animateContent ? 1 : 0)
+                    .padding(.top, DS.Spacing.sm)
                 }
 
                 // Action buttons
-                HStack(spacing: 20) {
-                    // Save button
-                    Button(action: {
+                HStack(spacing: DS.Spacing.xl) {
+                    actionButton(
+                        icon: showSaveConfirmation ? "checkmark.circle.fill" : "bookmark",
+                        label: showSaveConfirmation ? L.Oracle.saved.text(vi) : L.Oracle.save.text(vi),
+                        color: showSaveConfirmation ? DS.Color.jade : DS.Color.inkFaded
+                    ) {
                         viewModel.saveReading()
                         showSaveConfirmation = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            showSaveConfirmation = false
-                        }
-                    }) {
-                        VStack(spacing: 4) {
-                            Image(systemName: showSaveConfirmation ? "checkmark.circle.fill" : "bookmark")
-                                .font(.title3)
-                            Text(showSaveConfirmation ? "Saved" : "Save")
-                                .font(.system(.caption2, design: .serif))
-                        }
-                        .foregroundColor(showSaveConfirmation ? .jade : .inkBlack.opacity(0.6))
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { showSaveConfirmation = false }
                     }
 
-                    // Share button
-                    Button(action: {
+                    actionButton(
+                        icon: "square.and.arrow.up",
+                        label: L.Oracle.share.text(vi),
+                        color: DS.Color.inkFaded
+                    ) {
                         shareContent = viewModel.shareText()
                         showShareSheet = true
-                    }) {
-                        VStack(spacing: 4) {
-                            Image(systemName: "square.and.arrow.up")
-                                .font(.title3)
-                            Text("Share")
-                                .font(.system(.caption2, design: .serif))
-                        }
-                        .foregroundColor(.inkBlack.opacity(0.6))
                     }
 
-                    // New reading
-                    Button(action: {
-                        withAnimation(.easeInOut(duration: 0.4)) {
-                            viewModel.resetRitual()
-                        }
-                    }) {
-                        VStack(spacing: 4) {
-                            Image(systemName: "plus.circle")
-                                .font(.title3)
-                            Text("New")
-                                .font(.system(.caption2, design: .serif))
-                        }
-                        .foregroundColor(.gold)
+                    actionButton(
+                        icon: "plus.circle",
+                        label: L.Oracle.newReading.text(vi),
+                        color: DS.Color.gold
+                    ) {
+                        withAnimation(DS.Anim.default) { viewModel.resetRitual() }
                     }
                 }
-                .padding(.vertical, 24)
-                .opacity(animateContent ? 1 : 0)
+                .padding(.vertical, DS.Spacing.xl)
 
                 // Footer
-                Text("古老的智慧 现代的启示")
-                    .font(.system(.caption2, design: .serif))
-                    .foregroundColor(.inkBlack.opacity(0.25))
-                    .padding(.bottom, 32)
+                Text(L.App.footer.text(vi))
+                    .font(DS.Font.serif(11))
+                    .foregroundColor(DS.Color.inkFaded.opacity(0.3))
+                    .padding(.bottom, DS.Spacing.xl)
             }
         }
-        .ritualBackground()
+        .background(RitualBackground())
         .onAppear {
-            withAnimation(.easeOut(duration: 0.6).delay(0.2)) {
-                animateContent = true
-            }
+            withAnimation(.easeOut(duration: 0.5).delay(0.15)) { animateContent = true }
         }
         .sheet(isPresented: $showShareSheet) {
             ShareSheet(activityItems: [shareContent])
         }
     }
-}
 
-// MARK: - Hexagram Display Card
-struct HexagramDisplayView: View {
-    let hexagram: Hexagram?
-    let index: Int
-    let isSecondary: Bool
-    let lineValues: [LineValue]?
-    let movingPositions: [Int]
+    // MARK: - Hexagram Analysis Block
+    func hexagramAnalysis(data: OracleDisplayData, isSecondary: Bool) -> some View {
+        let hex = isSecondary ? data.secondaryHexagram : data.primaryHexagram
+        guard let h = hex else { return AnyView(EmptyView()) }
 
-    private struct LineInfo {
-        let isYang: Bool
-        let isMoving: Bool
-        let color: Color
-    }
+        return AnyView(
+            VStack(spacing: DS.Spacing.md) {
+                // Chinese name
+                Text(h.chineseName)
+                    .font(DS.Font.chinese(52))
+                    .foregroundColor(isSecondary ? DS.Color.gold : DS.Color.ink)
+                    .opacity(0.6)
 
-    private var lineInfos: [LineInfo] {
-        (0..<6).map { i in
-            let lineIdx = 5 - i
-            var isYang = false
-            var isMoving = false
+                // Name (bilingual)
+                VStack(spacing: 2) {
+                    Text(h.name)
+                        .font(DS.Font.serif(20, weight: .semibold))
+                        .foregroundColor(DS.Color.ink)
+                    if let viName = h.nameVi {
+                        Text(viName)
+                            .font(DS.Font.serif(15))
+                            .foregroundColor(DS.Color.gold)
+                            .opacity(isVietnamese ? 1 : 0.4)
+                    }
+                }
 
-            if let values = lineValues, lineIdx < values.count {
-                let val = values[lineIdx]
-                isYang = val == .youngYang || val == .oldYang
-                isMoving = val == .oldYin || val == .oldYang
-            } else if let hex = hexagram {
-                let lines = hex.lines
-                isYang = lineIdx < lines.count ? lines[lineIdx] == .yang : false
-            }
+                // Hexagram number
+                Text("Hexagram \(h.id + 1)")
+                    .font(DS.Font.mono(12))
+                    .foregroundColor(DS.Color.inkFaded.opacity(0.4))
 
-            let color: Color = isMoving ? .movingGold : (isSecondary ? .gold.opacity(0.7) : .inkBlack)
-            return LineInfo(isYang: isYang, isMoving: isMoving, color: color)
-        }
-    }
+                // Lines (top to bottom)
+                VStack(spacing: 8) {
+                    ForEach((0..<6).reversed(), id: \.self) { i in
+                        let idx = 5 - i
+                        let val = isSecondary ? nil : data.lineValues[safe: idx]
+                        let isYang: Bool
+                        let isMoving: Bool
+                        if let v = val {
+                            isYang = v == .youngYang || v == .oldYang
+                            isMoving = v == .oldYin || v == .oldYang
+                        } else {
+                            isYang = h.lines[idx] == .yang
+                            isMoving = false
+                        }
+                        HexagramLineView(
+                            isYang: isYang,
+                            isMoving: isMoving,
+                            color: isMoving ? DS.Color.gold : (isSecondary ? DS.Color.gold.opacity(0.6) : DS.Color.ink),
+                            animated: !isSecondary,
+                            width: 100
+                        )
+                    }
+                }
+                .padding(DS.Spacing.md)
+                .background(
+                    RoundedRectangle(cornerRadius: DS.Radius.sm, style: .continuous)
+                        .fill(DS.Color.surface)
+                        .cardShadow()
+                )
+                .padding(.horizontal, DS.Spacing.lg)
 
-    var body: some View {
-        let infos = lineInfos
-        return VStack(spacing: 0) {
-            // Hexagram number and name
-            if let hex = hexagram {
-                Text(hex.chineseName)
-                    .font(.system(.title, design: .serif))
-                    .fontWeight(.light)
-                    .foregroundColor(isSecondary ? .gold : .inkBlack)
-                    .opacity(0.7)
+                // Judgment
+                VStack(spacing: 8) {
+                    Text(L.Oracle.judgment.text(vi))
+                        .font(DS.Font.serif(13, weight: .semibold))
+                        .foregroundColor(DS.Color.inkFaded)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, DS.Spacing.lg)
 
-                Text(hex.displayName)
-                    .font(.system(.title3, design: .serif))
-                    .fontWeight(.medium)
-                    .foregroundColor(.inkBlack.opacity(0.8))
-                    .padding(.bottom, 12)
-            }
+                    let judgmentText = vi && h.judgmentVi != nil ? h.judgmentVi! : h.judgment
+                    Text(judgmentText)
+                        .font(DS.Font.serif(16))
+                        .foregroundColor(DS.Color.ink)
+                        .lineSpacing(6)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, DS.Spacing.lg)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
 
-            // Hexagram lines (vertical stack, top to bottom)
-            VStack(spacing: 6) {
-                ForEach(infos.indices.reversed(), id: \.self) { idx in
-                    let info = infos[idx]
-                    HexagramLineView(
-                        isYang: info.isYang,
-                        isMoving: info.isMoving,
-                        color: info.color,
-                        animated: !isSecondary,
-                        width: 90
-                    )
+                // Image
+                VStack(spacing: 8) {
+                    Text(L.Oracle.image.text(vi))
+                        .font(DS.Font.serif(13, weight: .semibold))
+                        .foregroundColor(DS.Color.inkFaded)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, DS.Spacing.lg)
+
+                    let imageText = vi && h.imageVi != nil ? h.imageVi! : h.image
+                    Text(imageText)
+                        .font(DS.Font.serif(14))
+                        .foregroundColor(DS.Color.inkFaded)
+                        .italic()
+                        .lineSpacing(4)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, DS.Spacing.lg)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 40)
-            .background(
-                RoundedRectangle(cornerRadius: 4)
-                    .fill(Color.ricePaper.opacity(0.3))
-            )
-
-            // Judgment
-            if let hex = hexagram {
-                Text(hex.judgment)
-                    .font(.system(.body, design: .serif))
-                    .foregroundColor(.inkBlack.opacity(0.7))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
-                    .padding(.top, 16)
-                    .fixedSize(horizontal: false, vertical: true)
-
-                // Image text
-                Text(hex.image)
-                    .font(.system(.callout, design: .serif))
-                    .foregroundColor(.inkBlack.opacity(0.5))
-                    .italic()
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
-                    .padding(.top, 8)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-        }
-        .padding(.horizontal, 16)
+        )
     }
-}
 
-// MARK: - Moving Line Card
-struct MovingLineCard: View {
-    let position: Int
-    let text: String
-    let lineValue: LineValue
+    // MARK: - Moving Line Card
+    func movingLineCard(position: Int, text: String, value: LineValue) -> some View {
+        let names = [
+            L.Override.bottom, L.Override.second, L.Override.third,
+            L.Override.fourth, L.Override.fifth, L.Override.top
+        ]
+        let name = names[safe: position] ?? Localized("Line \(position+1)", "Hào \(position+1)")
+        let analysis = vi ? lineAnalysisVi(position: position, value: value) : lineAnalysisEn(position: position, value: value)
 
-    private let positionNames = ["Bottom", "Second", "Third", "Fourth", "Fifth", "Top"]
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        return VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text("Line \(position + 1) (\(positionNames[safe: position] ?? ""))")
-                    .font(.system(.subheadline, design: .serif))
-                    .fontWeight(.semibold)
-                    .foregroundColor(.movingGold)
-
+                Circle().fill(DS.Color.crimson).frame(width: 6, height: 6)
+                Text("\(L.Oracle.changingLines.text(vi)) \(position + 1)")
+                    .font(DS.Font.serif(14, weight: .semibold))
+                    .foregroundColor(DS.Color.crimson)
                 Spacer()
-
-                Text(lineValue.chineseChar)
-                    .font(.system(.caption, design: .serif))
-                    .foregroundColor(.movingGold.opacity(0.7))
+                Text(value.chineseChar)
+                    .font(DS.Font.serif(12))
+                    .foregroundColor(DS.Color.gold)
             }
-
             Text(text)
-                .font(.system(.callout, design: .serif))
-                .foregroundColor(.inkBlack.opacity(0.7))
+                .font(DS.Font.serif(15))
+                .foregroundColor(DS.Color.ink)
+                .lineSpacing(4)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(analysis)
+                .font(DS.Font.serif(13))
+                .foregroundColor(DS.Color.jade)
+                .italic()
+                .lineSpacing(3)
                 .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(12)
+        .padding(DS.Spacing.md)
         .background(
-            RoundedRectangle(cornerRadius: 6)
-                .fill(Color.movingGold.opacity(0.06))
+            RoundedRectangle(cornerRadius: DS.Radius.md, style: .continuous)
+                .fill(DS.Color.surface)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 6)
-                        .stroke(Color.movingGold.opacity(0.15), lineWidth: 0.5)
+                    RoundedRectangle(cornerRadius: DS.Radius.md, style: .continuous)
+                        .stroke(DS.Color.crimson.opacity(0.15), lineWidth: 1)
                 )
         )
-        .padding(.horizontal, 24)
+        .padding(.horizontal, DS.Spacing.lg)
+    }
+
+    // MARK: - Interpretation Section
+    func interpretationSection(hex: Hexagram, data: OracleDisplayData) -> some View {
+        VStack(alignment: .leading, spacing: DS.Spacing.md) {
+            Text(L.Oracle.interpretation.text(vi))
+                .font(DS.Font.serif(18, weight: .semibold))
+                .foregroundColor(DS.Color.ink)
+                .padding(.horizontal, DS.Spacing.lg)
+
+            let interpretation = vi ? vietnameseInterpretation(hex: hex, data: data) : englishInterpretation(hex: hex, data: data)
+            Text(interpretation)
+                .font(DS.Font.serif(15))
+                .foregroundColor(DS.Color.ink.opacity(0.8))
+                .lineSpacing(6)
+                .padding(.horizontal, DS.Spacing.lg)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    // MARK: - Line Analysis
+    func lineAnalysisEn(position: Int, value: LineValue) -> String {
+        let lineNum = position + 1
+        if value == .oldYin || value == .oldYang {
+            return "This is a moving line — it will transform into its opposite in the secondary hexagram. The energy here is at a tipping point."
+        }
+        return "This line is stable. Its energy is settled and reliable."
+    }
+
+    func lineAnalysisVi(position: Int, value: LineValue) -> String {
+        let lineNum = position + 1
+        if value == .oldYin || value == .oldYang {
+            return "Hào này là hào động — nó sẽ biến đổi thành hào đối lập trong quẻ biến. Năng lượng ở đây đang ở điểm chuyển giao."
+        }
+        return "Hào này ổn định. Năng lượng của nó đã lắng đọng và đáng tin cậy."
+    }
+
+    // MARK: - Interpretation
+    func englishInterpretation(hex: Hexagram, data: OracleDisplayData) -> String {
+        var text = "This hexagram reveals the energy of your present situation. "
+        text += "The Judgment speaks directly to your question — read it as a mirror of your current state. "
+
+        if hex.id == 63 || hex.id == 46 {
+            text += "This hexagram carries special weight: "
+            text += hex.id == 63
+                ? "it represents completion, but warns that the end of one cycle is the beginning of another."
+                : "it represents the liminal space before completion — everything is in motion, not yet resolved."
+        }
+
+        if !data.movingLineTexts.isEmpty {
+            text += "\n\nThe moving lines indicate areas of transformation. "
+            text += "They point to where change is actively working in your life. "
+            text += data.movingLineTexts.count == 1
+                ? "One line moves — a focused shift in one area."
+                : data.movingLineTexts.count == 6
+                ? "All lines move — a complete transformation is underway."
+                : "\(data.movingLineTexts.count) lines move — significant change in multiple areas."
+        }
+
+        if let secondaryIdx = data.secondaryIndex {
+            let secondaryHex = HexagramService.shared.hexagram(at: secondaryIdx)
+            text += "\n\nThe secondary hexagram — \(secondaryHex?.name ?? "transformed state") — shows the outcome toward which the current energy is evolving."
+        }
+
+        text += "\n\nRead the Image text as guidance for how to embody the wisdom of this hexagram in your daily life."
+        return text
+    }
+
+    func vietnameseInterpretation(hex: Hexagram, data: OracleDisplayData) -> String {
+        var text = "Quẻ này tiết lộ năng lượng của tình huống hiện tại của bạn. "
+        text += "Thoán từ nói trực tiếp với câu hỏi của bạn — hãy đọc nó như tấm gương phản chiếu trạng thái hiện tại. "
+
+        if hex.id == 63 || hex.id == 46 {
+            text += "Quẻ này mang ý nghĩa đặc biệt: "
+            text += hex.id == 63
+                ? "nó đại diện cho sự hoàn thành, nhưng cảnh báo rằng kết thúc của một chu kỳ là khởi đầu của chu kỳ khác."
+                : "nó đại diện cho không gian giữa trước khi hoàn thành — mọi thứ đang chuyển động, chưa kết thúc."
+        }
+
+        if !data.movingLineTexts.isEmpty {
+            text += "\n\nCác hào động chỉ ra những lĩnh vực chuyển hóa. "
+            text += "Chúng chỉ ra nơi thay đổi đang tích cực diễn ra trong cuộc sống bạn."
+        }
+
+        if let secondaryIdx = data.secondaryIndex {
+            let secondaryHex = HexagramService.shared.hexagram(at: secondaryIdx)
+            text += "\n\nQuẻ biến — \(secondaryHex?.nameVi ?? "trạng thái chuyển hóa") — cho thấy kết quả mà năng lượng hiện tại đang hướng tới."
+        }
+
+        text += "\n\nHãy đọc Tượng truyện như lời chỉ dẫn cho cách thể hiện sự minh triết của quẻ này trong cuộc sống hàng ngày."
+        return text
+    }
+
+    @State private var shareContent = ""
+}
+
+// MARK: - Action Button Helper
+@ViewBuilder
+func actionButton(icon: String, label: String, color: Color, action: @escaping () -> Void) -> some View {
+    Button(action: action) {
+        VStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+            Text(label)
+                .font(DS.Font.serif(12))
+        }
+        .foregroundColor(color)
     }
 }
 
-// MARK: - UIKit Share Sheet Wrapper
+// MARK: - Share Sheet
 struct ShareSheet: UIViewControllerRepresentable {
     let activityItems: [Any]
-
     func makeUIViewController(context: Context) -> UIActivityViewController {
         UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
     }
-
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
-}
-
-// MARK: - Preview
-struct OracleView_Previews: PreviewProvider {
-    static var previews: some View {
-        OracleView(viewModel: RitualViewModel.preview)
-    }
+    func updateUIViewController(_ vc: UIActivityViewController, context: Context) {}
 }

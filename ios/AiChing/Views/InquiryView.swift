@@ -1,156 +1,105 @@
 import SwiftUI
 
-// MARK: - Step 2: Inquiry (Crystallizing Intent)
-/// User types their question (5–200 chars). Keystroke dynamics are collected as entropy.
+// MARK: - Step 2: Inquiry
 struct InquiryView: View {
     @ObservedObject var viewModel: RitualViewModel
-    @FocusState private var isTextFieldFocused: Bool
+    @State private var isVietnamese = false
+    @FocusState private var isFocused: Bool
 
-    private let minChars = 5
+    var vi: Bool { isVietnamese }
     private let maxChars = 200
 
     var body: some View {
         VStack(spacing: 0) {
-            // Step indicator
-            StepProgressView(currentStep: .inquiry)
-                .padding(.top, 16)
-                .padding(.bottom, 8)
+            StepBadge(number: 2, label: L.Step.inquiry.text(vi))
+                .padding(.top, DS.Spacing.md)
 
-            // Title
-            Text("问 卦")
-                .font(.system(.title, design: .serif))
-                .fontWeight(.light)
-                .foregroundColor(.inkBlack)
-                .opacity(0.7)
-
-            Text("Inquiry")
-                .font(.system(.subheadline, design: .serif))
-                .foregroundColor(.inkBlack.opacity(0.4))
-                .italic()
-
-            Spacer()
-
-            // Instruction
-            Text("Write your question with sincerity.")
-                .font(.system(.body, design: .serif))
-                .foregroundColor(.inkBlack.opacity(0.6))
-                .padding(.horizontal, 32)
-
-            Spacer()
-
-            // Text input card (paper-textured)
-            VStack(alignment: .leading, spacing: 12) {
-                // Paper texture background
-                ZStack(alignment: .topLeading) {
-                    // Paper card
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.ricePaper)
-                        .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 2)
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        // Vietnamese instruction
-                        Text("Viết câu hỏi của bạn")
-                            .font(.system(.caption, design: .serif))
-                            .foregroundColor(.inkBlack.opacity(0.35))
-                            .padding(.horizontal, 16)
-                            .padding(.top, 12)
-
-                        // Text editor
-                        TextEditor(text: $viewModel.questionText)
-                            .font(.system(.body, design: .serif))
-                            .foregroundColor(.inkBlack)
-                            .hideScrollBackground()
-                            .background(Color.clear)
-                            .frame(minHeight: 100, maxHeight: 160)
-                            .padding(.horizontal, 12)
-                            .focused($isTextFieldFocused)
-                            .onChange(of: viewModel.questionText) { newValue in
-                                // Enforce max length
-                                if newValue.count > maxChars {
-                                    viewModel.questionText = String(newValue.prefix(maxChars))
-                                }
-                                viewModel.registerKeystroke(character: String(newValue.last ?? " "))
-                            }
-                            .onAppear {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                    isTextFieldFocused = true
-                                }
-                            }
-                    }
-                }
-                .frame(height: 200)
-
-                // Character count
-                HStack {
-                    Text("\(viewModel.questionText.count) / \(maxChars)")
-                        .font(.system(.caption, design: .monospaced))
-                        .foregroundColor(viewModel.questionText.count < minChars
-                            ? .crimson.opacity(0.6)
-                            : .jade.opacity(0.6))
-
-                    Spacer()
-
-                    if viewModel.questionText.count < minChars {
-                        Text("最少 \(minChars) 字")
-                            .font(.system(.caption2, design: .serif))
-                            .foregroundColor(.crimson.opacity(0.5))
-                    }
-                }
-                .padding(.horizontal, 4)
+            VStack(spacing: DS.Spacing.sm) {
+                Text(L.Inquiry.instruction.text(vi))
+                    .font(DS.Font.serif(15))
+                    .foregroundColor(DS.Color.ink.opacity(0.7))
+                    .multilineTextAlignment(.center)
+                LanguageToggle(isVietnamese: $isVietnamese)
             }
-            .padding(.horizontal, 32)
+            .padding(.horizontal, DS.Spacing.xl)
+            .padding(.top, DS.Spacing.md)
 
             Spacer()
 
-            // Submit button
-            Button(action: {
-                isTextFieldFocused = false
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    viewModel.submitQuestion()
+            // Examples
+            VStack(alignment: .leading, spacing: DS.Spacing.sm) {
+                Text(L.Inquiry.examples.text(vi))
+                    .font(DS.Font.serif(12, weight: .semibold))
+                    .foregroundColor(DS.Color.inkFaded)
+
+                ForEach([L.Inquiry.ex1, L.Inquiry.ex2, L.Inquiry.ex3], id: \.en) { ex in
+                    Button(action: {
+                        viewModel.questionText = ex.text(vi)
+                        viewModel.registerKeystroke(character: String(ex.text(vi).last ?? " "))
+                    }) {
+                        Text(ex.text(vi))
+                            .font(DS.Font.serif(13))
+                            .foregroundColor(DS.Color.gold)
+                            .lineLimit(1)
+                    }
                 }
-            }) {
-                Text("Next →")
-                    .font(.system(.headline, design: .serif))
-                    .foregroundColor(viewModel.questionText.count >= minChars ? .ricePaper : .gray)
-                    .padding(.horizontal, 40)
-                    .padding(.vertical, 14)
+            }
+            .padding(.horizontal, DS.Spacing.xl)
+
+            Spacer()
+
+            // Text input
+            VStack(spacing: DS.Spacing.sm) {
+                TextEditor(text: $viewModel.questionText)
+                    .font(DS.Font.serif(16))
+                    .foregroundColor(DS.Color.ink)
+                    .hideScrollBackground()
+                    .frame(minHeight: 100, maxHeight: 150)
+                    .padding(DS.Spacing.sm)
                     .background(
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(viewModel.questionText.count >= minChars
-                                ? Color.inkBlack
-                                : Color.gray.opacity(0.3))
+                        RoundedRectangle(cornerRadius: DS.Radius.sm, style: .continuous)
+                            .fill(DS.Color.surface)
+                            .cardShadow()
                     )
+                    .focused($isFocused)
+                    .onChange(of: viewModel.questionText) { newValue in
+                        if newValue.count > maxChars {
+                            viewModel.questionText = String(newValue.prefix(maxChars))
+                        }
+                        viewModel.registerKeystroke(character: String(newValue.last ?? " "))
+                    }
+
+                HStack {
+                    Text("\(viewModel.questionText.count)/\(maxChars)")
+                        .font(DS.Font.mono(12))
+                        .foregroundColor(viewModel.questionText.count < 5 ? DS.Color.crimson.opacity(0.6) : DS.Color.jade)
+                    Spacer()
+                    if viewModel.questionText.count < 5 {
+                        Text(L.Inquiry.minChars.text(vi))
+                            .font(DS.Font.serif(11))
+                            .foregroundColor(DS.Color.crimson.opacity(0.6))
+                    }
+                }
+                .padding(.horizontal, DS.Spacing.xs)
             }
-            .disabled(viewModel.questionText.count < minChars)
-            .buttonStyle(ScaleButtonStyle())
-            .padding(.bottom, 32)
+            .padding(.horizontal, DS.Spacing.xl)
+
+            Spacer()
+
+            PrimaryButton(
+                title: L.Inquiry.next.text(vi),
+                subtitle: viewModel.questionText.count >= 5 ? nil : L.Inquiry.minChars.text(vi)
+            ) {
+                isFocused = false
+                withAnimation(DS.Anim.default) { viewModel.submitQuestion() }
+            }
+            .disabled(viewModel.questionText.count < 5)
+            .opacity(viewModel.questionText.count >= 5 ? 1 : 0.4)
 
             Spacer()
         }
-        .ritualBackground()
-        .onTapGesture {
-            isTextFieldFocused = false
-        }
-    }
-}
-
-// MARK: - Preview
-struct InquiryView_Previews: PreviewProvider {
-    static var previews: some View {
-        InquiryView(viewModel: RitualViewModel.preview)
-    }
-}
-
-// MARK: - Hide Scroll Background (iOS 15+ compatibility)
-extension View {
-    /// Hides the scroll content background. Uses native API on iOS 16+
-    /// and UITextView appearance workaround on iOS 15.
-    func hideScrollBackground() -> some View {
-        if #available(iOS 16.0, *) {
-            return AnyView(self.scrollContentBackground(.hidden))
-        } else {
-            UITextView.appearance().backgroundColor = .clear
-            return AnyView(self)
-        }
+        .background(RitualBackground())
+        .onTapGesture { isFocused = false }
+        .onAppear { DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { isFocused = true }}
     }
 }

@@ -8,6 +8,16 @@ public struct Hexagram: Codable, Identifiable, Sendable, Equatable {
     public let judgment: String
     public let image: String
     public let lineTexts: [String]
+    public let nameVi: String?
+    public let judgmentVi: String?
+    public let imageVi: String?
+    public let lineTextsVi: [String]?
+
+    public init(id: Int, name: String, chineseName: String, judgment: String, image: String, lineTexts: [String], nameVi: String? = nil, judgmentVi: String? = nil, imageVi: String? = nil, lineTextsVi: [String]? = nil) {
+        self.id = id; self.name = name; self.chineseName = chineseName
+        self.judgment = judgment; self.image = image; self.lineTexts = lineTexts
+        self.nameVi = nameVi; self.judgmentVi = judgmentVi; self.imageVi = imageVi; self.lineTextsVi = lineTextsVi
+    }
 
     public var lines: [LineType] {
         (0..<6).map { position in
@@ -31,14 +41,7 @@ public struct Hexagram: Codable, Identifiable, Sendable, Equatable {
         "\(id + 1). \(name)"
     }
 
-    public init(id: Int, name: String, chineseName: String, judgment: String, image: String, lineTexts: [String]) {
-        self.id = id
-        self.name = name
-        self.chineseName = chineseName
-        self.judgment = judgment
-        self.image = image
-        self.lineTexts = lineTexts
-    }
+
 }
 
 public struct HexagramDatabase: Codable, Sendable {

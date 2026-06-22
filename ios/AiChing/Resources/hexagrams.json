@@ -13,7 +13,11 @@
         "A tied-up sack. No blame, no praise.",
         "A yellow lower garment brings supreme good fortune.",
         "Dragons fight in the meadow. Their blood is black and yellow."
-      ]
+      ],
+      "nameVi": "Khôn – Tiếp thụ",
+      "judgmentVi": "Khôn: Tiếp thụ đem lại thành công lớn lao, hanh thông nhờ sự bền bỉ của con ngựa cái. Người quân tử muốn dẫn đầu thì lạc đường, nhưng nếu đi theo thì tìm thấy hướng dẫn.",
+      "imageVi": "Địa thế Khôn. Người quân tử có đức dày nâng đỡ muôn vật.",
+      "lineTextsVi": null
     },
     {
       "id": 1,
@@ -28,7 +32,11 @@
         "Walking in the midst of others, returning alone.",
         "Noble-hearted return. No remorse.",
         "Missing the return. Misfortune. Misfortune from within. If troops are set marching, one will in the end suffer a great defeat, disastrous for the ruler of the country. For ten years one cannot attack again."
-      ]
+      ],
+      "nameVi": "Phục – Hồi phục",
+      "judgmentVi": "Phục: Ra vào không có lỗi. Bạn bè đến không có lỗi. Đường đi có lui có tới. Bảy ngày đến ngày hồi phục. Có nơi để đi thì tốt.",
+      "imageVi": "Phục trong lòng đất. Vua xưa đóng cửa ngày đông chí.",
+      "lineTextsVi": null
     },
     {
       "id": 2,
@@ -43,7 +51,11 @@
         "Complete approach. No blame.",
         "Wise approach. This is right for a great prince. Good fortune.",
         "Magnanimous approach. Good fortune. No blame."
-      ]
+      ],
+      "nameVi": "Lâm – Đến gần",
+      "judgmentVi": "Lâm: Đại hanh thông. Chính bền có lợi. Đến tháng tám sẽ có tai họa.",
+      "imageVi": "Trên đất dưới đầm. Người quân tử dạy dỗ không mệt mỏi.",
+      "lineTextsVi": null
     },
     {
       "id": 3,
@@ -58,7 +70,11 @@
         "Contemplation of the light of the kingdom. It furthers one to exert influence as a guest of the king.",
         "Contemplation of my life. The superior man is without blame.",
         "Contemplation of his life. The superior man is without blame."
-      ]
+      ],
+      "nameVi": "Quán – Quan sát",
+      "judgmentVi": "Quán: Lễ rửa đã xong nhưng chưa dâng lễ. Mọi người thành tín ngưỡng nhìn lên Ngài.",
+      "imageVi": "Gió trên đất. Vua xưa quan sát các nước.",
+      "lineTextsVi": null
     },
     {
       "id": 4,
@@ -73,7 +89,11 @@
         "Bites on dried gristly meat. He receives metal arrows. It furthers one to be mindful of difficulties and to be persevering. Good fortune.",
         "Bites on dried lean meat. He receives yellow gold. Perseveringly aware of danger. No blame.",
         "His neck is fastened in the wooden cangue, so that his ears disappear. Misfortune."
-      ]
+      ],
+      "nameVi": "Phệ hạp – Cắn xé",
+      "judgmentVi": "Phệ hạp: Hanh thông. Dùng pháp luật công bằng thì tốt.",
+      "imageVi": "Sấm chớp. Vua xưa đặt hình phạt rõ ràng.",
+      "lineTextsVi": null
     },
     {
       "id": 5,
@@ -88,7 +108,11 @@
         "Grace or simplicity? A white horse comes as if on wings. He is not a robber, he will woo at the right time.",
         "Grace in the hills and gardens. The roll of silk is meager, small. In the end, good fortune.",
         "Simple grace. No blame."
-      ]
+      ],
+      "nameVi": "Bí – Trang sức",
+      "judgmentVi": "Bí: Hanh thông. Việc nhỏ thì làm được lợi.",
+      "imageVi": "Lửa dưới núi. Người quân tử xử lý công việc hiện tại.",
+      "lineTextsVi": null
     },
     {
       "id": 6,
@@ -103,7 +127,11 @@
         "The bed is split up to the skin. Misfortune.",
         "A shoal of fishes. Favor comes through the court ladies. Everything furthers.",
         "There is a large fruit still uneaten. The noble man receives a carriage. The house of the inferior man is split apart."
-      ]
+      ],
+      "nameVi": "Bác – Ly tán",
+      "judgmentVi": "Bác: Không có lợi khi đi đâu cả.",
+      "imageVi": "Núi trên đất. Kẻ trên ban rộng cho kẻ dưới.",
+      "lineTextsVi": null
     },
     {
       "id": 7,
@@ -118,7 +146,11 @@
         "He who can be persevering remains without blame.",
         "Use no medicine in an illness incurred through no fault of your own. It will pass of itself.",
         "Innocent action brings misfortune. Nothing furthers."
-      ]
+      ],
+      "nameVi": "Vô vọng – Thuần túy",
+      "judgmentVi": "Vô vọng: Đại hanh thông. Chính bền có lợi. Nếu ai không đúng đạo thì có họa, không có lợi khi làm gì.",
+      "imageVi": "Sấm dưới trời. Người quân tử thuận thiên nuôi dưỡng.",
+      "lineTextsVi": null
     },
     {
       "id": 8,
@@ -133,7 +165,11 @@
         "The headboard of a young bull. Great good fortune.",
         "The tusk of a gelded boar. Good fortune.",
         "One attains the way of heaven. Success."
-      ]
+      ],
+      "nameVi": "Đại súc – Tích chứa",
+      "judgmentVi": "Đại súc: Chính bền có lợi. Không ăn ở nhà được tốt. Có thể vượt sông lớn.",
+      "imageVi": "Trời trong núi. Người quân tử học cổ kim.",
+      "lineTextsVi": null
     },
     {
       "id": 9,
@@ -148,7 +184,11 @@
         "Turning to the source of nourishment. Good fortune. With keen eyes alert like a tiger, insatiable as the longing. No blame.",
         "Turning away from the path. To remain persevering brings good fortune. One should not cross the great water.",
         "The source of nourishment. Awareness of danger brings good fortune. It furthers one to cross the great water."
-      ]
+      ],
+      "nameVi": "Di – Nuôi dưỡng",
+      "judgmentVi": "Di: Chính bền tốt. Xem sự nuôi dưỡng và xem miệng mình muốn gì.",
+      "imageVi": "Dưới núi có sấm. Người quân tử cẩn ngôn tiết thực.",
+      "lineTextsVi": null
     },
     {
       "id": 10,
@@ -163,7 +203,11 @@
         "The ridgepole is braced. Good fortune. If there are ulterior motives, it is humiliating.",
         "A dry poplar puts forth flowers. An old wife takes a young husband. No blame. No praise.",
         "One must go through the water. It goes over one's head. Misfortune. No blame."
-      ]
+      ],
+      "nameVi": "Đại quá – Vượt quá",
+      "judgmentVi": "Đại quá: Nóc nhà cong xuống sắp gãy. Có nơi đến thì hanh thông.",
+      "imageVi": "Hồ trên cây. Người quân tử độc lập vô úy.",
+      "lineTextsVi": null
     },
     {
       "id": 11,
@@ -178,7 +222,11 @@
         "Nothing but a jug of wine, a bowl of rice with it, earthen vessels simply handed through the window. There is certainly no blame in this.",
         "The abyss is not filled to overflowing, it is filled only to the rim. No blame.",
         "Bound with cords and ropes, shut in between thorn-hedged prison walls. For three years one does not find the way. Misfortune."
-      ]
+      ],
+      "nameVi": "Khảm – Nguy hiểm",
+      "judgmentVi": "Khảm: Khảm kép. Có lòng thành tín thì hanh thông trong lòng. Làm gì cũng thành công.",
+      "imageVi": "Nước chảy không ngừng. Người quân tử hành đức bền bỉ.",
+      "lineTextsVi": null
     },
     {
       "id": 12,
@@ -193,7 +241,11 @@
         "How sudden it comes! It flares up, dies down, is thrown away.",
         "Tears in floods, sighing and lamenting. Good fortune.",
         "The king uses him to march forth and chastise. Then it is best to kill the leaders and take captive the followers. No blame."
-      ]
+      ],
+      "nameVi": "Ly – Bám vào",
+      "judgmentVi": "Ly: Chính bền có lợi. Hanh thông. Nuôi bò cái tốt.",
+      "imageVi": "Minh lưỡng tác. Người quân tử chiếu sáng tứ phương.",
+      "lineTextsVi": null
     },
     {
       "id": 13,
@@ -208,7 +260,11 @@
         "Perseverance brings good fortune. Remorse disappears. If a man is agitated in mind, and his thoughts go hither and thither, only those friends will follow of whose purpose he is certain.",
         "Influence appears in the flesh of the back above the shoulder blades. No remorse.",
         "Influence appears in the jaws, cheeks, and tongue."
-      ]
+      ],
+      "nameVi": "Hàm – Cảm ứng",
+      "judgmentVi": "Hàm: Hanh thông. Chính bền tốt. Cưới vợ được tốt.",
+      "imageVi": "Sơn thượng hữu trạch. Người quân tử hư tâm tiếp vật.",
+      "lineTextsVi": null
     },
     {
       "id": 14,
@@ -223,7 +279,11 @@
         "No game in the field.",
         "Giving duration to one's character through perseverance. For a woman, good fortune; for a man, misfortune.",
         "Restlessness as a permanent state brings misfortune."
-      ]
+      ],
+      "nameVi": "Hằng – Bền lâu",
+      "judgmentVi": "Hằng: Hanh thông. Không lỗi. Chính bền có lợi. Có nơi đến thì tốt.",
+      "imageVi": "Sấm gió tương tế. Người quân tử lập thân bất di.",
+      "lineTextsVi": null
     },
     {
       "id": 15,
@@ -238,7 +298,11 @@
         "Voluntary retreat brings good fortune to the superior man and downfall to the inferior man.",
         "Friendly retreat. Perseverance brings good fortune.",
         "Cheerful retreat. Everything furthers."
-      ]
+      ],
+      "nameVi": "Độn – Thoái lui",
+      "judgmentVi": "Độn: Hanh thông. Việc nhỏ thì có lợi.",
+      "imageVi": "Thiên hạ hữu sơn. Người quân tử xa tiểu nhân.",
+      "lineTextsVi": null
     },
     {
       "id": 16,
@@ -253,7 +317,11 @@
         "Perseverance brings good fortune. Remorse disappears. The hedge opens; there is no entanglement. Power depends upon the axletree of a large wagon.",
         "Loses the goat with ease. No remorse.",
         "A goat butts against a hedge. It cannot go backward, it cannot go forward. Nothing furthers. If one notes the difficulty, this brings good fortune."
-      ]
+      ],
+      "nameVi": "Đại tráng – Sức mạnh lớn",
+      "judgmentVi": "Đại tráng: Chính bền có lợi.",
+      "imageVi": "Sấm trên trời. Người quân tử không bước đường trái.",
+      "lineTextsVi": null
     },
     {
       "id": 17,
@@ -268,7 +336,11 @@
         "Progressing like a hamster. Perseverance brings danger.",
         "Remorse disappears. One must not regard gain and loss. Undertakings bring good fortune. Everything furthers.",
         "Progressing with the horns is permissible only to punish one's own city. Being conscious of danger brings good fortune. No blame."
-      ]
+      ],
+      "nameVi": "Tấn – Tiến bộ",
+      "judgmentVi": "Tấn: Quan công được thưởng nhiều ngựa. Một ngày được tiếp kiến ba lần.",
+      "imageVi": "Mặt trời mọc trên đất. Người quân tử tự chiêu minh đức.",
+      "lineTextsVi": null
     },
     {
       "id": 18,
@@ -283,7 +355,11 @@
         "He penetrates the left side of the belly. One gets at the very heart of the darkening of the light, and leaves the gate and courtyard.",
         "Darkening of the light as with the prince of Ji. Perseverance furthers.",
         "Not light but darkness. First he climbed up to heaven, then he plunged into the depths of the earth."
-      ]
+      ],
+      "nameVi": "Minh di – Ám muội",
+      "judgmentVi": "Minh di: Gian nan nên giữ chính bền.",
+      "imageVi": "Quang nhập địa trung. Người quân tử uyển dung.",
+      "lineTextsVi": null
     },
     {
       "id": 19,
@@ -298,7 +374,11 @@
         "She is the treasure of the house. Great good fortune.",
         "As a king he approaches his family. Fear not. Good fortune.",
         "His work commands respect. In the end good fortune comes."
-      ]
+      ],
+      "nameVi": "Gia nhân – Người nhà",
+      "judgmentVi": "Gia nhân: Sự bền chí của người phụ nữ có lợi.",
+      "imageVi": "Gió ra từ lửa. Người quân tử định phép gia đình.",
+      "lineTextsVi": null
     },
     {
       "id": 20,
@@ -313,7 +393,11 @@
         "Isolated through opposition, one meets a like-minded man with whom one can associate in good faith. Despite danger, no blame.",
         "Remorse disappears. The companion bites his way through the wrappings. If one goes to him, how could it be a mistake?",
         "Isolated through opposition, one sees one's companion as a pig covered with dirt, as a wagon full of devils. First one draws a bow against him, then one lays the bow aside. He is not a robber; he will woo at the right time. As one goes, rain falls; then good fortune comes."
-      ]
+      ],
+      "nameVi": "Khuê – Chia rẽ",
+      "judgmentVi": "Khuê: Việc nhỏ tốt.",
+      "imageVi": "Trên lửa dưới hồ. Người quân tử cầu đồng tồn dị.",
+      "lineTextsVi": null
     },
     {
       "id": 21,
@@ -328,7 +412,11 @@
         "Going forward leads to obstruction, coming back leads to union.",
         "In the midst of the greatest obstruction, friends come.",
         "Going forward leads to obstruction, coming back leads to great good fortune. It furthers one to see the great man."
-      ]
+      ],
+      "nameVi": "Kiển – Khó khăn",
+      "judgmentVi": "Kiển: Hướng tây nam tốt. Hướng đông bắc không tốt. Gặp người lớn có lợi.",
+      "imageVi": "Nước trên núi. Người quân tử phản thân tu đức.",
+      "lineTextsVi": null
     },
     {
       "id": 22,
@@ -343,7 +431,11 @@
         "Deliver yourself from your own flesh and blood. Hasten to do so. Good fortune.",
         "The superior man delivers himself. Good fortune. In the eyes of the inferior man he is his equal.",
         "The prince shoots at a hawk on top of a high wall. He kills it. Everything furthers."
-      ]
+      ],
+      "nameVi": "Giải – Cởi mở",
+      "judgmentVi": "Giải: Hướng tây nam tốt. Không còn việc thì về tốt. Có việc thì gấp rút tốt.",
+      "imageVi": "Sấm mưa tác. Người quân tử xá quá hựu tội.",
+      "lineTextsVi": null
     },
     {
       "id": 23,
@@ -358,7 +450,11 @@
         "If a man decreases his faults, it makes the other hasten to come and rejoice. No blame.",
         "Someone does indeed increase him. Ten pairs of tortoise shells cannot oppose this. Supreme good fortune.",
         "If one is increased without depriving others, there is no blame. Perseverance brings good fortune. It furthers one to undertake something. One obtains servants but no longer has a separate home."
-      ]
+      ],
+      "nameVi": "Tổn – Giảm bớt",
+      "judgmentVi": "Tổn: Có lòng thành tín thì đại cát. Có thể dùng hai chén nhỏ để tế.",
+      "imageVi": "Sơn hạ hữu trạch. Người quân tử nộ dục.",
+      "lineTextsVi": null
     },
     {
       "id": 24,
@@ -373,7 +469,11 @@
         "If you walk in the middle and report to the prince, he will follow. It furthers one to be used in the removal of the capital.",
         "If in truth you have a kindly heart, ask not. Supreme good fortune. Truly, kindness will be recognized as your virtue.",
         "He brings increase to no one. Someone will even strike him. He does not keep his heart constantly steady. Misfortune."
-      ]
+      ],
+      "nameVi": "Ích – Tăng thêm",
+      "judgmentVi": "Ích: Có việc làm tốt. Có thể vượt sông lớn.",
+      "imageVi": "Gió sấm. Người quân tử kiến thiện thiên.",
+      "lineTextsVi": null
     },
     {
       "id": 25,
@@ -388,7 +488,11 @@
         "There is no skin on his thighs, and walking comes hard. If a man lets himself be led like a sheep, remorse disappears. But if these words are heard, they will not be believed.",
         "In dealing with weeds, firm resolution is necessary. Walking in the middle remains free of blame.",
         "No cry. In the end misfortune comes."
-      ]
+      ],
+      "nameVi": "Quải – Quyết đoán",
+      "judgmentVi": "Quải: Kiên quyết trình bày ở triều đình. Có hiểm. Báo cho thành mình.",
+      "imageVi": "Hồ trên trời. Người quân tử thi ân huệ.",
+      "lineTextsVi": null
     },
     {
       "id": 26,
@@ -403,7 +507,11 @@
         "No fish in the basket. This leads to misfortune.",
         "A melon covered with willow leaves. Hidden lines. Then it drops down to one from heaven.",
         "He comes to meet with his horns. Humiliation. No blame."
-      ]
+      ],
+      "nameVi": "Cấu – Gặp gỡ",
+      "judgmentVi": "Cấu: Con gái mạnh mẽ. Không nên lấy cô ấy.",
+      "imageVi": "Thiên phong cấu. Người quân tử hào lệnh.",
+      "lineTextsVi": null
     },
     {
       "id": 27,
@@ -418,7 +526,11 @@
         "Great good fortune. No blame.",
         "If in gathering together one has position, there is no blame. If there is lack of trust, let him constantly practice virtue and perseverance, then remorse disappears.",
         "Sighing and weeping, floods of tears. No blame."
-      ]
+      ],
+      "nameVi": "Tụy – Tụ họp",
+      "judgmentVi": "Tụy: Hanh thông. Vua đến thái miếu. Gặp người lớn tốt.",
+      "imageVi": "Địa thượng hữu trạch. Người quân tử tu binh.",
+      "lineTextsVi": null
     },
     {
       "id": 28,
@@ -433,7 +545,11 @@
         "The king offers him Mount Qi. Good fortune. No blame.",
         "Perseverance brings good fortune. One pushes upward by steps.",
         "Pushing upward in darkness. It furthers one to be unremittingly persevering."
-      ]
+      ],
+      "nameVi": "Thăng – Thăng tiến",
+      "judgmentVi": "Thăng: Đại hanh thông. Gặp người lớn. Đi về phía nam tốt.",
+      "imageVi": "Địa trung sinh mộc. Người quân tử thuận đức.",
+      "lineTextsVi": null
     },
     {
       "id": 29,
@@ -448,7 +564,11 @@
         "He comes very slowly, oppressed by a golden carriage. Humiliation, but the end is reached.",
         "His nose and feet are cut off. Oppression at the hands of the man with the red knee bands. Joy comes softly. It furthers one to make offerings and libations.",
         "He is oppressed by creeping vines. He moves uncertainly and says, 'Movement brings remorse.' If one feels remorse over this and makes a start, good fortune comes."
-      ]
+      ],
+      "nameVi": "Khốn – Cùng quẫn",
+      "judgmentVi": "Khốn: Hanh thông. Chính bền. Người lớn mang lại tốt lành.",
+      "imageVi": "Trạch vô thủy. Người quân tử mệnh lập.",
+      "lineTextsVi": null
     },
     {
       "id": 30,
@@ -463,7 +583,11 @@
         "The well is being lined. No blame.",
         "In the clear cold spring one drinks.",
         "One draws from the well without hindrance. It is dependable. Supreme good fortune."
-      ]
+      ],
+      "nameVi": "Tỉnh – Cái giếng",
+      "judgmentVi": "Tỉnh: Thay đổi đời không thay đổi giếng. Không mất không được. Đến lui đều lấy nước.",
+      "imageVi": "Mộc thượng hữu thủy. Người quân tử lao dân.",
+      "lineTextsVi": null
     },
     {
       "id": 31,
@@ -478,7 +602,11 @@
         "Remorse disappears. Believe this. To change the mandate brings good fortune.",
         "The great man changes like a tiger. Even before he questions, he is believed.",
         "The superior man changes like a panther. The inferior man changes in his face. To go forward brings misfortune. To remain persevering brings good fortune."
-      ]
+      ],
+      "nameVi": "Cách – Cách mạng",
+      "judgmentVi": "Cách: Đến ngày sẽ được tin. Đại hanh thông nhờ chính bền.",
+      "imageVi": "Trạch trung hữu hỏa. Người quân tử trị lịch.",
+      "lineTextsVi": null
     },
     {
       "id": 32,
@@ -493,7 +621,11 @@
         "The legs of the cauldron are broken. The prince's meal is spilled and his person is soiled. Misfortune.",
         "The cauldron has yellow handles, golden carrying rings. Perseverance furthers.",
         "The cauldron has rings of jade. Great good fortune. Everything furthers."
-      ]
+      ],
+      "nameVi": "Đỉnh – Cái đỉnh",
+      "judgmentVi": "Đỉnh: Đại cát. Hanh thông.",
+      "imageVi": "Mộc thượng hữu hỏa. Người quân tử chính mệnh.",
+      "lineTextsVi": null
     },
     {
       "id": 33,
@@ -508,7 +640,11 @@
         "Shock is mired.",
         "Shock goes hither and thither. Danger. However, no blame. Things have to be done.",
         "Shock brings ruin and terrified gazing around. Going forward brings misfortune. If it has not yet touched one's own body but only one's neighbor, there is no blame. One's comrades have talked of it."
-      ]
+      ],
+      "nameVi": "Chấn – Chấn động",
+      "judgmentVi": "Chấn: Hanh thông. Kinh đến! Kinh đến! Sau cười ha ha!",
+      "imageVi": "Tiệm lôi. Người quân tử tỉnh hối.",
+      "lineTextsVi": null
     },
     {
       "id": 34,
@@ -523,7 +659,11 @@
         "Keeping his trunk still. No blame.",
         "Keeping his jaws still. The words have order. Remorse disappears.",
         "Noble-hearted keeping still. Good fortune."
-      ]
+      ],
+      "nameVi": "Cấn – Ngừng nghỉ",
+      "judgmentVi": "Cấn: Giữ lưng. Vào sân không thấy người. Không lỗi.",
+      "imageVi": "Kiền kiền. Người quân tử tư bất xuất vị.",
+      "lineTextsVi": null
     },
     {
       "id": 35,
@@ -538,7 +678,11 @@
         "The wild goose gradually draws near the tree. Maybe it will find a flat branch. No blame.",
         "The wild goose gradually draws near the summit. For three years the woman has no child. In the end nothing can hinder her. Good fortune.",
         "The wild goose gradually draws near the cloud heights. Its feathers can be used for the sacred dance. Good fortune."
-      ]
+      ],
+      "nameVi": "Tiệm – Tiến dần",
+      "judgmentVi": "Tiệm: Gả con gái tốt. Chính bền tốt.",
+      "imageVi": "Sơn thượng hữu mộc. Người quân tử cư hiền đức.",
+      "lineTextsVi": null
     },
     {
       "id": 36,
@@ -553,7 +697,11 @@
         "The marrying maiden draws out the allotted time. A late marriage comes in due course.",
         "The sovereign I gave his daughter in marriage. The embroidered garments of the princess were not as gorgeous as those of the serving maid. The moon that is nearly full brings good fortune.",
         "The woman holds the basket, but there are no fruits in it. The man stabs the sheep, but no blood flows. Nothing that leads to good."
-      ]
+      ],
+      "nameVi": "Quy muội – Gả chồng",
+      "judgmentVi": "Quy muội: Làm thì hung. Không có lợi.",
+      "imageVi": "Sấm trên hồ. Người quân tử tri chung tri thủy.",
+      "lineTextsVi": null
     },
     {
       "id": 37,
@@ -568,7 +716,11 @@
         "The curtain is of such fullness that the polestars can be seen at noon. He meets his ruler, who is of like kind. Good fortune.",
         "Lines of light come and spread good fortune. There is praise.",
         "His house is full of abundance. He screens off his family. He peers through the gate and no longer perceives anyone. For three years he sees nothing. Misfortune."
-      ]
+      ],
+      "nameVi": "Phong – Phong phú",
+      "judgmentVi": "Phong: Hanh thông. Vua đạt đến phong thịnh. Đừng buồn.",
+      "imageVi": "Sấm chớp giai chí. Người quân tử đoán ngục.",
+      "lineTextsVi": null
     },
     {
       "id": 38,
@@ -583,7 +735,11 @@
         "The wanderer rests in a shelter. He obtains his property and an ax. My heart is not glad.",
         "He shoots a pheasant. It drops with the first arrow. In the end this brings both praise and office.",
         "The bird's nest burns up. The wanderer laughs at first, then must cry and lament. Through carelessness he loses his cow. Misfortune."
-      ]
+      ],
+      "nameVi": "Lữ – Lữ khách",
+      "judgmentVi": "Lữ: Hanh thông nhờ nhỏ nhẹ. Chính bền tốt cho lữ khách.",
+      "imageVi": "Hỏa trên núi. Người quân tử thận hình.",
+      "lineTextsVi": null
     },
     {
       "id": 39,
@@ -598,7 +754,11 @@
         "Remorse vanishes. During the hunt three kinds of game are caught.",
         "Perseverance brings good fortune. Remorse vanishes. Nothing that does not further. No beginning, but an end. Before the change, three days. After the change, three days. Good fortune.",
         "Penetration under the bed. He loses his property and his ax. Perseverance brings misfortune."
-      ]
+      ],
+      "nameVi": "Tốn – Thuận nhập",
+      "judgmentVi": "Tốn: Hanh thông nhờ nhỏ nhẹ. Có nơi đến. Gặp người lớn.",
+      "imageVi": "Tùy phong. Người quân tử thân mệnh.",
+      "lineTextsVi": null
     },
     {
       "id": 40,
@@ -613,7 +773,11 @@
         "Joyousness that is weighed is not at peace. After ridding himself of faults a man has joy.",
         "Sincerity toward disintegrating influences is dangerous.",
         "Seductive joyousness."
-      ]
+      ],
+      "nameVi": "Đoài – Vui vẻ",
+      "judgmentVi": "Đoài: Hanh thông. Chính bền tốt.",
+      "imageVi": "Hồ thượng gia hồ. Người quân tử bằng hữu giảng tập.",
+      "lineTextsVi": null
     },
     {
       "id": 41,
@@ -628,7 +792,11 @@
         "He disperses his group. Great good fortune. The dispersion leads in turn to accumulation, something that ordinary men do not think of.",
         "Loud screams. It furthers one to dispense with the king's storehouse. No blame.",
         "He disperses his blood. He goes out and keeps at a distance. No blame."
-      ]
+      ],
+      "nameVi": "Hoán – Phân tán",
+      "judgmentVi": "Hoán: Hanh thông. Vua đến thái miếu. Có thể vượt sông lớn.",
+      "imageVi": "Phong trên thủy. Vua xưa tế thiên.",
+      "lineTextsVi": null
     },
     {
       "id": 42,
@@ -643,7 +811,11 @@
         "Contented limitation. Success.",
         "Sweet limitation brings good fortune. Going forward brings esteem.",
         "Galling limitation. Perseverance brings misfortune. Remorse disappears."
-      ]
+      ],
+      "nameVi": "Tiết – Tiết chế",
+      "judgmentVi": "Tiết: Hanh thông. Tiết chế quá đáng không nên.",
+      "imageVi": "Trạch thượng hữu thủy. Người quân tử chế độ.",
+      "lineTextsVi": null
     },
     {
       "id": 43,
@@ -658,7 +830,11 @@
         "The moon nearly at the full. The team horse goes astray. No blame.",
         "He possesses the truth, which links together. No blame.",
         "Cockcrow penetrating to heaven. Perseverance brings misfortune."
-      ]
+      ],
+      "nameVi": "Trung phu – Lòng thành",
+      "judgmentVi": "Trung phu: Heo cá. Hanh thông. Vượt sông lớn. Chính bền tốt.",
+      "imageVi": "Phong trên hồ. Người quân tử hoãn tử.",
+      "lineTextsVi": null
     },
     {
       "id": 44,
@@ -673,7 +849,11 @@
         "No blame. He meets him without passing by. Going brings danger. One must be cautious. Do not act thus. Be constantly persevering.",
         "Dense clouds, no rain from our western territory. The prince shoots and hits him where he is in a cave.",
         "He passes him by, not meeting him. The flying bird leaves him. Misfortune. This means injury and disaster."
-      ]
+      ],
+      "nameVi": "Tiểu quá – Sai lầm nhỏ",
+      "judgmentVi": "Tiểu quá: Hanh thông. Việc nhỏ làm được. Việc lớn không nên làm.",
+      "imageVi": "Sấm trên núi. Người quân tử hành quá hồ ai.",
+      "lineTextsVi": null
     },
     {
       "id": 45,
@@ -688,7 +868,11 @@
         "There is fine clothing, but it is rags. Be careful all day long.",
         "The neighbor in the east slaughters an ox, but this does not equal the neighbor in the west's small sacrifice. His blessing indeed comes through. Sincere confession brings good fortune.",
         "He gets his head in the water. Danger."
-      ]
+      ],
+      "nameVi": "Ký tế – Đã xong",
+      "judgmentVi": "Ký tế: Thành công trong việc nhỏ. Đầu tốt cuối loạn.",
+      "imageVi": "Thủy tại hỏa thượng. Người quân tử tư tuệ.",
+      "lineTextsVi": null
     },
     {
       "id": 46,
@@ -703,7 +887,11 @@
         "Perseverance brings good fortune. Remorse disappears. Shock, thus to discipline the devil's country. For three years, great realms are beaten.",
         "Perseverance brings good fortune. No remorse. The light of the superior man is true. Good fortune.",
         "There is drinking of wine in genuine confidence. No blame. But if one wets his head, he loses it, in truth."
-      ]
+      ],
+      "nameVi": "Vị tế – Chưa xong",
+      "judgmentVi": "Vị tế: Hanh thông. Cáo nhỏ suýt qua sông nhưng ướt đuôi.",
+      "imageVi": "Hỏa tại thủy thượng. Người quân tử thận phân.",
+      "lineTextsVi": null
     },
     {
       "id": 47,
@@ -718,7 +906,11 @@
         "One cannot engage in conflict. One turns back and submits to fate, changes one's attitude, and finds peace in perseverance. Good fortune.",
         "To contend before him, a great man, is supreme good fortune.",
         "Even if by chance a leather belt is conferred on one, by the end of a morning it will have been snatched away three times."
-      ]
+      ],
+      "nameVi": "Tụng – Kiện tụng",
+      "judgmentVi": "Tụng: Có lòng thành nhưng bị cản. Giữa đường dừng lại tốt.",
+      "imageVi": "Thiên dữ thủy tương bối. Người quân tử tác sự.",
+      "lineTextsVi": null
     },
     {
       "id": 48,
@@ -733,7 +925,11 @@
         "The army retreats. No blame.",
         "There is game in the field. It furthers one to catch it. Without blame. Let the eldest lead the army. The younger transports corpses. Then perseverance brings misfortune.",
         "The great prince issues commands, founds states, vests families with fiefs. Inferior people should not be employed."
-      ]
+      ],
+      "nameVi": "Sư – Quân đội",
+      "judgmentVi": "Sư: Quân đội cần chính bền và có người chỉ huy mạnh mẽ.",
+      "imageVi": "Địa trung hữu thủy. Người quân tử dong dân.",
+      "lineTextsVi": null
     },
     {
       "id": 49,
@@ -748,7 +944,11 @@
         "Hold to him outwardly also. Perseverance brings good fortune.",
         "Manifestation of holding together. In the hunt the king uses beaters on three sides only and forgoes game that runs off in front. The citizens need no warning. Good fortune.",
         "He finds no head for holding together. Misfortune."
-      ]
+      ],
+      "nameVi": "Tỷ – Kết hợp",
+      "judgmentVi": "Tỷ: Hợp nhau tốt. Kẻ chậm trễ mang họa.",
+      "imageVi": "Địa thượng hữu thủy. Vua xưa kiến quốc.",
+      "lineTextsVi": null
     },
     {
       "id": 50,
@@ -763,7 +963,11 @@
         "If you are sincere, blood vanishes and fear gives way. No blame.",
         "If you are sincere and loyally attached, you are rich in your neighbor.",
         "The rain comes, there is holding back. This is the duty of the man of virtue who is riding. Now women get into difficulties. The moon is nearly full. If the superior man persists, misfortune."
-      ]
+      ],
+      "nameVi": "Tiểu súc – Nuôi dưỡng nhỏ",
+      "judgmentVi": "Tiểu súc: Hanh thông. Mây dày không mưa từ miền tây.",
+      "imageVi": "Phong hành thiên thượng. Người quân tử dực văn.",
+      "lineTextsVi": null
     },
     {
       "id": 51,
@@ -778,7 +982,11 @@
         "He treads on the tail of the tiger. He becomes wary and cautious. In the end, good fortune.",
         "Resolute conduct. Perseverance with awareness of danger brings good fortune.",
         "Review your conduct and weigh the favorable signs. When everything is fulfilled, supreme good fortune."
-      ]
+      ],
+      "nameVi": "Lý – Bước đi",
+      "judgmentVi": "Lý: Bước lên đuôi cọp. Cọp không cắn. Hanh thông.",
+      "imageVi": "Thiên trên hồ. Người quân tử định vị.",
+      "lineTextsVi": null
     },
     {
       "id": 52,
@@ -793,7 +1001,11 @@
         "He flutters down, not boasting of his wealth, together with his neighbor, guileless and sincere.",
         "The sovereign I gives his daughter in marriage. This brings blessing and supreme good fortune.",
         "The wall falls back into the moat. Use no army now. Make your commands known within your own town. Perseverance brings humiliation."
-      ]
+      ],
+      "nameVi": "Thái – Thái hòa",
+      "judgmentVi": "Thái: Kẻ nhỏ đi, người lớn đến. Tốt. Hanh thông.",
+      "imageVi": "Thiên địa giao. Người quân tử tài thành.",
+      "lineTextsVi": null
     },
     {
       "id": 53,
@@ -808,7 +1020,11 @@
         "He who acts according to the time is without blame. He who perseveres in righteousness stands honored.",
         "Standstill is giving way. For the superior man, good fortune. For the inferior man, ruin.",
         "The standstill changes again to good fortune. First misery, then happiness."
-      ]
+      ],
+      "nameVi": "Bĩ – Bế tắc",
+      "judgmentVi": "Bĩ: Kẻ xấu không tốt cho người quân tử. Lớn đi, nhỏ đến.",
+      "imageVi": "Thiên địa bất giao. Người quân tử đức nạn.",
+      "lineTextsVi": null
     },
     {
       "id": 54,
@@ -823,7 +1039,11 @@
         "He climbs up on his wall; he cannot attack. Good fortune.",
         "Men bound in fellowship first weep and lament, but afterward they laugh. After great struggles they succeed in meeting.",
         "Fellowship with men in the meadow. No remorse."
-      ]
+      ],
+      "nameVi": "Đồng nhân – Cùng người",
+      "judgmentVi": "Đồng nhân: Hanh thông. Vượt sông lớn. Chính bền tốt.",
+      "imageVi": "Thiên hỏa đồng nhân. Người quân tử biện vật.",
+      "lineTextsVi": null
     },
     {
       "id": 55,
@@ -838,7 +1058,11 @@
         "He differentiates himself from his neighbor. No blame.",
         "His truth is accessible, like a majestic prince. Good fortune.",
         "He is blessed by heaven. Good fortune. Nothing that does not further."
-      ]
+      ],
+      "nameVi": "Đại hữu – Sở hữu lớn",
+      "judgmentVi": "Đại hữu: Đại hanh thông.",
+      "imageVi": "Hỏa tại thiên thượng. Người quân tử ác ám dương thiện.",
+      "lineTextsVi": null
     },
     {
       "id": 56,
@@ -853,7 +1077,11 @@
         "Everything serves to further. Even in hurrying and gesticulating, everything serves to further.",
         "He may, because of his wealth, do nothing against his neighbor. It furthers one to undertake something. All is carried through. Good fortune.",
         "Modesty that comes to expression. It furthers one to set armies marching and to chastise one's own city and one's country."
-      ]
+      ],
+      "nameVi": "Khiêm – Khiêm tốn",
+      "judgmentVi": "Khiêm: Hanh thông. Người quân tử hoàn thành công việc.",
+      "imageVi": "Địa trung hữu sơn. Người quân tử quyết bổ.",
+      "lineTextsVi": null
     },
     {
       "id": 57,
@@ -868,7 +1096,11 @@
         "The cause of enthusiasm. He achieves great things. Doubt not. You gather friends around you as a clasp gathers the hair.",
         "Persistently ill, but he does not die.",
         "Dark enthusiasm. But if after he has changed he acts without blame, it is no blame. Though humiliating, no blame."
-      ]
+      ],
+      "nameVi": "Dự – Vui vẻ",
+      "judgmentVi": "Dự: Dựng tướng xuất quân thì tốt.",
+      "imageVi": "Sấm xuất địa. Vua xưa tác nhạc.",
+      "lineTextsVi": null
     },
     {
       "id": 58,
@@ -883,7 +1115,11 @@
         "Following creates success. Perseverance brings misfortune. To go one's way with sincerity brings clarity. How could this be blameworthy?",
         "Sincere in the good. Good fortune.",
         "He meets with firm allegiance and is still further bound. The king introduces him to the Western Mountain."
-      ]
+      ],
+      "nameVi": "Tùy – Tùy theo",
+      "judgmentVi": "Tùy: Đại hanh thông. Chính bền tốt. Không lỗi.",
+      "imageVi": "Sấm trong hồ. Người quân tử hướng tối nhập tức.",
+      "lineTextsVi": null
     },
     {
       "id": 59,
@@ -898,7 +1134,11 @@
         "Tolerating what has been spoiled by the father. In going one sees humiliation.",
         "Setting right what has been spoiled by the father. One meets with praise.",
         "He does not serve kings and princes, sets himself higher goals."
-      ]
+      ],
+      "nameVi": "Cổ – Sửa chữa",
+      "judgmentVi": "Cổ: Đại hanh thông. Vượt sông lớn. Ba ngày trước, ba ngày sau.",
+      "imageVi": "Phong hành sơn hạ. Người quân tử dụ dân.",
+      "lineTextsVi": null
     },
     {
       "id": 60,
@@ -913,7 +1153,11 @@
         "The forest at its peak. Good fortune.",
         "The forest endures. Good fortune.",
         "The forest in decline. Misfortune."
-      ]
+      ],
+      "nameVi": "Lâm – Khu rừng",
+      "judgmentVi": "Lâm: Tốt. Gặp người lớn thì hanh thông.",
+      "imageVi": "Thunder in the forest. Thus the superior man prepares for the unexpected.",
+      "lineTextsVi": null
     },
     {
       "id": 61,
@@ -928,7 +1172,11 @@
         "The watch is complete. Good fortune.",
         "The watch is wise. Good fortune.",
         "The watch is fulfilled. Good fortune."
-      ]
+      ],
+      "nameVi": "Quán – Quan sát",
+      "judgmentVi": "Quán: Lễ rửa đã xong nhưng chưa dâng lễ.",
+      "imageVi": "The wind moves over the earth. Thus the ancient kings made careful observation.",
+      "lineTextsVi": null
     },
     {
       "id": 62,
@@ -943,7 +1191,11 @@
         "The river is wide. It furthers one to wait.",
         "The river is crossed. Good fortune.",
         "The river overflows. Misfortune."
-      ]
+      ],
+      "nameVi": "Hà – Sông",
+      "judgmentVi": "Hà: Hanh thông. Vượt sông lớn.",
+      "imageVi": "Heaven and water meet. Thus the superior man navigates with care.",
+      "lineTextsVi": null
     },
     {
       "id": 63,
@@ -958,7 +1210,11 @@
         "Wavering flight over the depths. No blame.",
         "Flying dragon in the heavens. It furthers one to see the great man.",
         "Arrogant dragon will have cause to repent."
-      ]
+      ],
+      "nameVi": "Càn – Sáng tạo",
+      "judgmentVi": "Càn: Đại hanh thông nhờ chính bền.",
+      "imageVi": "Thiên hành kiện. Người quân tử tự cường bất tức.",
+      "lineTextsVi": null
     }
   ]
 }
