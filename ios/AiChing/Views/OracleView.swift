@@ -273,14 +273,6 @@ struct OracleView: View {
 
     // MARK: - Moving Line Card
     func movingLineCard(position: Int, text: String, value: LineValue) -> some View {
-        let names = [
-            L.Override.bottom, L.Override.second, L.Override.third,
-            L.Override.fourth, L.Override.fifth, L.Override.top
-        ]
-        let name = names[safe: position] ?? Localized("Line \(position+1)", "Hào \(position+1)")
-        let analysis = vi ? lineAnalysisVi(position: position, value: value) : lineAnalysisEn(position: position, value: value)
-
-        return VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Circle().fill(DS.Color.crimson).frame(width: 6, height: 6)
                 Text("\(L.Oracle.changingLines.text(vi)) \(position + 1)")

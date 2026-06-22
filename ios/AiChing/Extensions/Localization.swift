@@ -121,6 +121,12 @@ enum L {
     }
 }
 
+/// Add .text(_:) to all String tuple pairs used for bilingual strings.
+typealias LString = (String, String)
+extension LString {
+    func text(_ vi: Bool) -> String { vi ? self.1 : self.0 }
+}
+
 struct Localized {
     let en: String
     let vi: String
@@ -128,9 +134,7 @@ struct Localized {
     func text(_ isVietnamese: Bool) -> String { isVietnamese ? vi : en }
 }
 
-extension Localized {
-    static func + (lhs: Localized, rhs: Localized) -> Localized { Localized(lhs.en + rhs.en, lhs.vi + rhs.vi) }
-}
+extension Localized { static func + (lhs: Localized, rhs: Localized) -> Localized { Localized(lhs.en + rhs.en, lhs.vi + rhs.vi) } }
 
 struct LocalePreferenceKey: EnvironmentKey { static let defaultValue = false }
 extension EnvironmentValues {
