@@ -26,13 +26,19 @@ struct StillnessView: View {
 
             Spacer()
 
-            // Hold circle
+            // Hold circle with Tá»© TÆ°á»£ng (Four Symbols) background
             ZStack {
                 // Outer glow — visible touch target
                 Circle()
                     .stroke(DS.Color.gold.opacity(0.4), lineWidth: 2)
                     .frame(width: 260, height: 260)
                     .scaleEffect(breathScale)
+
+                // Tá»© TÆ°á»£ng — 4 circles at cardinal points
+                circleAt(angle: 0, radius: 150, size: 24, color: DS.Color.gold.opacity(0.3))
+                circleAt(angle: 90, radius: 150, size: 24, color: DS.Color.jade.opacity(0.25))
+                circleAt(angle: 180, radius: 150, size: 24, color: DS.Color.crimson.opacity(0.25))
+                circleAt(angle: 270, radius: 150, size: 24, color: DS.Color.gold.opacity(0.3))
 
                 // Dashed ring — indicates tappable area
                 Circle()
@@ -150,5 +156,16 @@ struct StillnessView: View {
                 height: CGFloat(viewModel.accelY * 5)
             )
         }
+    }
+
+    /// Position a small circle at angle (degrees) and radius from center
+    func circleAt(angle: Double, radius: CGFloat, size: CGFloat, color: Color) -> some View {
+        let rad = angle * .pi / 180
+        let x = cos(rad) * radius
+        let y = sin(rad) * radius
+        return Circle()
+            .stroke(color, lineWidth: 1)
+            .frame(width: size, height: size)
+            .offset(x: x, y: y)
     }
 }
