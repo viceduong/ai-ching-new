@@ -135,12 +135,17 @@ struct AncientText: ViewModifier {
         content
             .font(DS.Font.serif())
             .lineSpacing(6)
-            .if(available) { $0.tracking(0.5) }
+            .modifier(TrackingMod())
     }
+}
 
-    var available: Bool {
-        if #available(iOS 16.0, *) { return true }
-        return false
+struct TrackingMod: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 16.0, *) {
+            content.tracking(0.3)
+        } else {
+            content
+        }
     }
 }
 
