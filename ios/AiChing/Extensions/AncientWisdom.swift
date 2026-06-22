@@ -135,7 +135,12 @@ struct AncientText: ViewModifier {
         content
             .font(DS.Font.serif())
             .lineSpacing(6)
-            .tracking(0.5)
+            .if(available) { $0.tracking(0.5) }
+    }
+
+    var available: Bool {
+        if #available(iOS 16.0, *) { return true }
+        return false
     }
 }
 

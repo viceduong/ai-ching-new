@@ -30,7 +30,7 @@ struct OracleView: View {
                 .offset(y: animateContent ? 0 : 10)
 
                 // Language toggle
-                LanguageToggle(isVietnamese: $isVietnamese)
+                LanguageToggle()
                     .padding(.top, DS.Spacing.sm)
                     .opacity(animateContent ? 1 : 0)
 

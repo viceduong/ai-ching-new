@@ -20,7 +20,7 @@ struct StillnessView: View {
                     .foregroundColor(DS.Color.ink.opacity(0.7))
                     .multilineTextAlignment(.center)
 
-                LanguageToggle(isVietnamese: $isVietnamese)
+                LanguageToggle()
             }
             .padding(.horizontal, DS.Spacing.xl)
             .padding(.top, DS.Spacing.lg)
