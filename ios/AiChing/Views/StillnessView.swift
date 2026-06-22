@@ -34,11 +34,11 @@ struct StillnessView: View {
                     .frame(width: 260, height: 260)
                     .scaleEffect(breathScale)
 
-                // Tá»© TÆ°á»£ng — 4 circles at cardinal points
-                circleAt(angle: 0, radius: 150, size: 24, color: DS.Color.gold.opacity(0.3))
-                circleAt(angle: 90, radius: 150, size: 24, color: DS.Color.jade.opacity(0.25))
-                circleAt(angle: 180, radius: 150, size: 24, color: DS.Color.crimson.opacity(0.25))
-                circleAt(angle: 270, radius: 150, size: 24, color: DS.Color.gold.opacity(0.3))
+                // Tá»© TÆ°á»£ng — 4 circles at cardinal points, within visible frame
+                circleAt(angle: 0, radius: 110, size: 20, color: DS.Color.gold.opacity(0.35))
+                circleAt(angle: 90, radius: 110, size: 20, color: DS.Color.jade.opacity(0.3))
+                circleAt(angle: 180, radius: 110, size: 20, color: DS.Color.crimson.opacity(0.3))
+                circleAt(angle: 270, radius: 110, size: 20, color: DS.Color.gold.opacity(0.35))
 
                 // Dashed ring — indicates tappable area
                 Circle()
@@ -85,7 +85,7 @@ struct StillnessView: View {
                     .font(DS.Font.serif(20, weight: .semibold))
                     .foregroundColor(DS.Color.gold)
             }
-            .frame(height: 280)
+            .frame(width: 280, height: 280)
             .contentShape(Circle())
             .gesture(
                 DragGesture(minimumDistance: 0)
