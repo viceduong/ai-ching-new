@@ -122,7 +122,7 @@ enum L {
 }
 
 /// Helper for bilingual string display.
-func txt(_ pair: (String, String), _ vi: Bool) -> String { vi ? pair.1 : pair.0 }
+func t(_ pair: (String, String), _ vi: Bool) -> String { vi ? pair.1 : pair.0 }
 
 struct Localized {
     let en: String

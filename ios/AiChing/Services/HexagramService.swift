@@ -99,11 +99,13 @@ final class HexagramService: Sendable {
             Hexagram(id: 0, name: "Khôn – The Receptive", chineseName: "坤",
                      judgment: "The Receptive brings sublime success...",
                      image: "The earth's condition is receptive devotion...",
-                     lineTexts: ["Line 1", "Line 2", "Line 3", "Line 4", "Line 5", "Line 6"]),
+                     lineTexts: ["Line 1", "Line 2", "Line 3", "Line 4", "Line 5", "Line 6"],
+                     nameVi: nil, judgmentVi: nil, imageVi: nil, lineTextsVi: nil),
             Hexagram(id: 63, name: "Càn – The Creative", chineseName: "乾",
                      judgment: "The Creative works sublime success...",
                      image: "The movement of heaven is full of power...",
-                     lineTexts: ["Line 1", "Line 2", "Line 3", "Line 4", "Line 5", "Line 6"]),
+                     lineTexts: ["Line 1", "Line 2", "Line 3", "Line 4", "Line 5", "Line 6"],
+                     nameVi: nil, judgmentVi: nil, imageVi: nil, lineTextsVi: nil)
         ]
     }
 }
