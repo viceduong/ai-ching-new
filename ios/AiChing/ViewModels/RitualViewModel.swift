@@ -58,7 +58,7 @@ final class RitualViewModel: ObservableObject {
     private let storage = StorageService.shared
 
     // MARK: - Internal State
-    private var holdStartTime: Date?
+    var holdStartTime: Date?
     private var holdTimer: Timer?
     // MARK: - Initialization
 
@@ -431,7 +431,7 @@ final class RitualViewModel: ObservableObject {
     func shareReading(_ reading: Reading) -> String {
         var text = "🪷 I Ching Reading\n\n"
         text += "Question: \(reading.question)\n"
-        text += "Date: \(reading.date.formatted(date: .long, time: .short))\n"
+        text += "Date: \(reading.date.formatted(date: .long, time: .shortened))\n"
         text += "Primary Hexagram: \(hexagramLookup.name(for: reading.primaryHexagramIndex))\n"
         if let secondary = reading.secondaryHexagramIndex {
             text += "Secondary: \(hexagramLookup.name(for: secondary))\n"

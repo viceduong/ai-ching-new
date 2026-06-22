@@ -193,7 +193,7 @@ struct ReadingDetailView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     // Date
-                    Text(reading.date.formatted(date: .long, time: .short))
+                    Text(reading.date.formatted(date: .long, time: .shortened))
                         .font(.system(.caption, design: .serif))
                         .foregroundColor(.inkBlack.opacity(0.4))
                         .padding(.top, 16)

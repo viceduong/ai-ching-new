@@ -167,8 +167,7 @@ struct RitualDivider: View {
 struct CalligraphyTitle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(.system(.title2, design: .serif))
-            .fontWeight(.semibold)
+            .font(.system(.title2, design: .serif).weight(.semibold))
             .foregroundColor(.inkBlack)
     }
 }

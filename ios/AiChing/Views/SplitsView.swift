@@ -145,7 +145,7 @@ struct SplitsView: View {
                                         let xPositions = dragTrajectory.map(\.x)
                                         let meanX = xPositions.reduce(0, +) / max(1, Double(xPositions.count))
                                         let variance = xPositions.reduce(0) { $0 + ($1 - meanX) * ($1 - meanX) }
-                                        let jitter = xPositions.count > 0 ? [variance / Double(xPositions.count)] : [0.0]
+                                        let jitter: [Double] = xPositions.count > 0 ? [Double(variance / Double(xPositions.count))] : [0.0]
 
                                         viewModel.completeSplit(
                                             percentage: percentage,
