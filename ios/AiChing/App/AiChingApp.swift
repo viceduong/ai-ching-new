@@ -8,10 +8,18 @@ struct AiChingApp: App {
     @StateObject private var viewModel = RitualViewModel()
     @AppStorage("themeOverride") private var themeOverride: String = "system"
 
+    var effectiveScheme: ColorScheme? {
+        switch themeOverride {
+        case "dark":  return .dark
+        case "light": return .light
+        default:      return nil
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView(viewModel: viewModel)
-                .preferredColorScheme(ThemeOverride.effective)
+                .preferredColorScheme(effectiveScheme)
                 .onAppear {
                     viewModel.checkMotionAuthorization()
                 }

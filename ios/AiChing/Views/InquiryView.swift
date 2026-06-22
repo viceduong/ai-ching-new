@@ -34,36 +34,36 @@ struct InquiryView: View {
 
                 // Ex1
                 HStack(spacing: 8) {
-                    Image(systemName: "text.quote").font(.system(size: 10)).foregroundColor(DS.Color.gold.opacity(0.4))
-                    Text(t(L.Inquiry.ex1, vi)).font(DS.Font.serif(13)).foregroundColor(DS.Color.gold).lineLimit(2).multilineTextAlignment(.leading)
+                    Image(systemName: "text.quote").font(.system(size: 10)).foregroundColor(DS.Color.gold)
+                    Text("What guidance do I need right now?").font(DS.Font.serif(13)).foregroundColor(DS.Color.ink).lineLimit(2).multilineTextAlignment(.leading)
                     Spacer()
                 }
                 .padding(.horizontal, 12).padding(.vertical, 10)
-                .background(RoundedRectangle(cornerRadius: DS.Radius.sm).fill(DS.Color.surface).overlay(RoundedRectangle(cornerRadius: DS.Radius.sm).stroke(DS.Color.gold.opacity(0.12), lineWidth: 0.5)))
+                .background(RoundedRectangle(cornerRadius: DS.Radius.sm).fill(DS.Color.surface).overlay(RoundedRectangle(cornerRadius: DS.Radius.sm).stroke(DS.Color.gold.opacity(0.2), lineWidth: 0.5)))
                 .padding(.horizontal, DS.Spacing.xl)
-                .onTapGesture { viewModel.questionText = t(L.Inquiry.ex1, vi) }
+                .onTapGesture { viewModel.questionText = "What guidance do I need right now?" }
 
                 // Ex2
                 HStack(spacing: 8) {
-                    Image(systemName: "text.quote").font(.system(size: 10)).foregroundColor(DS.Color.gold.opacity(0.4))
-                    Text(t(L.Inquiry.ex2, vi)).font(DS.Font.serif(13)).foregroundColor(DS.Color.gold).lineLimit(2).multilineTextAlignment(.leading)
+                    Image(systemName: "text.quote").font(.system(size: 10)).foregroundColor(DS.Color.gold)
+                    Text("How can I find clarity in my work?").font(DS.Font.serif(13)).foregroundColor(DS.Color.ink).lineLimit(2).multilineTextAlignment(.leading)
                     Spacer()
                 }
                 .padding(.horizontal, 12).padding(.vertical, 10)
-                .background(RoundedRectangle(cornerRadius: DS.Radius.sm).fill(DS.Color.surface).overlay(RoundedRectangle(cornerRadius: DS.Radius.sm).stroke(DS.Color.gold.opacity(0.12), lineWidth: 0.5)))
+                .background(RoundedRectangle(cornerRadius: DS.Radius.sm).fill(DS.Color.surface).overlay(RoundedRectangle(cornerRadius: DS.Radius.sm).stroke(DS.Color.gold.opacity(0.2), lineWidth: 0.5)))
                 .padding(.horizontal, DS.Spacing.xl)
-                .onTapGesture { viewModel.questionText = t(L.Inquiry.ex2, vi) }
+                .onTapGesture { viewModel.questionText = "How can I find clarity in my work?" }
 
                 // Ex3
                 HStack(spacing: 8) {
-                    Image(systemName: "text.quote").font(.system(size: 10)).foregroundColor(DS.Color.gold.opacity(0.4))
-                    Text(t(L.Inquiry.ex3, vi)).font(DS.Font.serif(13)).foregroundColor(DS.Color.gold).lineLimit(2).multilineTextAlignment(.leading)
+                    Image(systemName: "text.quote").font(.system(size: 10)).foregroundColor(DS.Color.gold)
+                    Text("What energy surrounds my relationship?").font(DS.Font.serif(13)).foregroundColor(DS.Color.ink).lineLimit(2).multilineTextAlignment(.leading)
                     Spacer()
                 }
                 .padding(.horizontal, 12).padding(.vertical, 10)
-                .background(RoundedRectangle(cornerRadius: DS.Radius.sm).fill(DS.Color.surface).overlay(RoundedRectangle(cornerRadius: DS.Radius.sm).stroke(DS.Color.gold.opacity(0.12), lineWidth: 0.5)))
+                .background(RoundedRectangle(cornerRadius: DS.Radius.sm).fill(DS.Color.surface).overlay(RoundedRectangle(cornerRadius: DS.Radius.sm).stroke(DS.Color.gold.opacity(0.2), lineWidth: 0.5)))
                 .padding(.horizontal, DS.Spacing.xl)
-                .onTapGesture { viewModel.questionText = t(L.Inquiry.ex3, vi) }
+                .onTapGesture { viewModel.questionText = "What energy surrounds my relationship?" }
             }
 
             // Text input

@@ -30,9 +30,14 @@ struct StillnessView: View {
             ZStack {
                 // Outer glow — visible touch target
                 Circle()
-                    .stroke(DS.Color.gold.opacity(0.35), lineWidth: 1.5)
+                    .stroke(DS.Color.gold.opacity(0.4), lineWidth: 2)
                     .frame(width: 260, height: 260)
                     .scaleEffect(breathScale)
+
+                // Dashed ring — indicates tappable area
+                Circle()
+                    .stroke(DS.Color.gold.opacity(0.2), style: StrokeStyle(lineWidth: 1, dash: [6, 4]))
+                    .frame(width: 240, height: 240)
 
                 // Progress arc
                 Circle()
