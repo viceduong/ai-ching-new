@@ -18,7 +18,7 @@ enum DS {
 
         static let background = SwiftUI.Color("background") ?? SwiftUI.Color(.systemBackground)
         static let surface    = SwiftUI.Color("surface") ?? SwiftUI.Color(.secondarySystemBackground)
-        static let surfaceElevated = SwiftUI.Color("surfaceElevated") ?? SwiftUI.Color(.systemBackground)
+        static let surfaceElevated = SwiftUI.Color("surfaceElevated") ?? SwiftUI.Color(.tertiarySystemBackground)
 
         static let gold       = SwiftUI.Color("gold") ?? SwiftUI.Color(red: 0.75, green: 0.58, blue: 0.20)
         static let goldLight  = SwiftUI.Color("goldLight") ?? SwiftUI.Color(red: 0.82, green: 0.68, blue: 0.32)
@@ -161,34 +161,50 @@ struct PrimaryButton: View {
 }
 
 struct LanguageToggle: View {
-    @Binding var isVietnamese: Bool
+    @AppStorage("lang_vi") var isVietnamese = false
+
     var body: some View {
-        Button(action: {
-            withAnimation(DS.Anim.spring) { isVietnamese.toggle() }
-            UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        }) {
-            HStack(spacing: 6) {
+        HStack(spacing: 0) {
+            // EN button
+            Button(action: {
+                withAnimation(DS.Anim.spring) { isVietnamese = false }
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            }) {
                 Text("EN")
-                    .font(DS.Font.serif(12, weight: isVietnamese ? .regular : .semibold))
-                    .foregroundColor(isVietnamese ? DS.Color.inkFaded : DS.Color.gold)
-                Text("|")
-                    .font(DS.Font.serif(11))
-                    .foregroundColor(DS.Color.inkVeryFaded)
-                Text("VI")
-                    .font(DS.Font.serif(12, weight: isVietnamese ? .semibold : .regular))
-                    .foregroundColor(isVietnamese ? DS.Color.gold : DS.Color.inkFaded)
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
-            .background(
-                RoundedRectangle(cornerRadius: DS.Radius.pill, style: .continuous)
-                    .fill(DS.Color.surface)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: DS.Radius.pill, style: .continuous)
-                            .stroke(DS.Color.gold.opacity(0.3), lineWidth: 1)
+                    .font(DS.Font.serif(13, weight: isVietnamese ? .regular : .semibold))
+                    .foregroundColor(isVietnamese ? DS.Color.inkFaded : Color.white)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 6)
+                    .background(
+                        RoundedRectangle(cornerRadius: DS.Radius.pill)
+                            .fill(isVietnamese ? Color.clear : DS.Color.ink)
                     )
-            )
+            }
+
+            // VI button
+            Button(action: {
+                withAnimation(DS.Anim.spring) { isVietnamese = true }
+                UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            }) {
+                Text("VI")
+                    .font(DS.Font.serif(13, weight: isVietnamese ? .semibold : .regular))
+                    .foregroundColor(isVietnamese ? Color.white : DS.Color.inkFaded)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 6)
+                    .background(
+                        RoundedRectangle(cornerRadius: DS.Radius.pill)
+                            .fill(isVietnamese ? DS.Color.ink : Color.clear)
+                    )
+            }
         }
+        .background(
+            RoundedRectangle(cornerRadius: DS.Radius.pill)
+                .stroke(DS.Color.gold.opacity(0.4), lineWidth: 1)
+                .background(
+                    RoundedRectangle(cornerRadius: DS.Radius.pill)
+                        .fill(DS.Color.surface)
+                )
+        )
     }
 }
 
@@ -234,6 +250,12 @@ struct ScaleButtonStyle: ButtonStyle {
 }
 
 // MARK: - ThemeToggle View
+// MARK: - Global Vietnamese Preference (via UserDefaults)
+var isVietnamesePref: Bool {
+    get { UserDefaults.standard.bool(forKey: "lang_vi") }
+    set { UserDefaults.standard.set(newValue, forKey: "lang_vi") }
+}
+
 struct ThemeToggleView: View {
     @AppStorage("themeOverride") private var themeOverride: String = "system"
 

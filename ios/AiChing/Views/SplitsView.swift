@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Step 3: Six Splits
 struct SplitsView: View {
     @ObservedObject var viewModel: RitualViewModel
-    @State private var isVietnamese = false
+    @AppStorage("lang_vi") var isVietnamese = false
     @State private var dragOffset: CGFloat = 0
     @State private var dragTrajectory: [CGPoint] = []
     @State private var lastDragPosition: CGPoint?

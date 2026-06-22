@@ -4,7 +4,7 @@ import SwiftUI
 struct StillnessView: View {
     @ObservedObject var viewModel: RitualViewModel
     @State private var pulseAnimation = false
-    @State private var isVietnamese = false
+    @AppStorage("lang_vi") var isVietnamese = false
 
     var vi: Bool { isVietnamese }
 

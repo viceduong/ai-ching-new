@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Step 2: Inquiry
 struct InquiryView: View {
     @ObservedObject var viewModel: RitualViewModel
-    @State private var isVietnamese = false
+    @AppStorage("lang_vi") var isVietnamese = false
     @FocusState private var isFocused: Bool
 
     var vi: Bool { isVietnamese }

@@ -4,7 +4,7 @@ import SwiftUI
 struct OracleView: View {
     @ObservedObject var viewModel: RitualViewModel
     @Environment(\.colorScheme) var colorScheme
-    @State private var isVietnamese = false
+    @AppStorage("lang_vi") var isVietnamese = false
     @State private var showSaveConfirmation = false
     @State private var showShareSheet = false
     @State private var animateContent = false

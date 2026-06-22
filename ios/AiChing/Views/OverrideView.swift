@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Step 5: Intuition Override
 struct OverrideView: View {
     @ObservedObject var viewModel: RitualViewModel
-    @State private var isVietnamese = false
+    @AppStorage("lang_vi") var isVietnamese = false
     private let labels = [
         Localized("1st (Bottom)", "Sơ (Hào 1)"),
         Localized("2nd", "Nhị (Hào 2)"),
