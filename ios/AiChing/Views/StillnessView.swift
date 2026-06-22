@@ -28,9 +28,9 @@ struct StillnessView: View {
 
             // Hold circle
             ZStack {
-                // Outer glow
+                // Outer glow — visible touch target
                 Circle()
-                    .stroke(DS.Color.gold.opacity(0.12), lineWidth: 1)
+                    .stroke(DS.Color.gold.opacity(0.35), lineWidth: 1.5)
                     .frame(width: 260, height: 260)
                     .scaleEffect(breathScale)
 
@@ -49,14 +49,14 @@ struct StillnessView: View {
                     .offset(rippleOffset)
                     .opacity(viewModel.isHolding ? 0.6 : 0)
 
-                // Ink pool
+                // Ink pool — always visible, darkens with hold
                 Circle()
                     .fill(
                         RadialGradient(
                             colors: [
-                                DS.Color.ink.opacity(0.1 + 0.7 * viewModel.holdProgress),
-                                DS.Color.ink.opacity(0.05 + 0.3 * viewModel.holdProgress),
-                                .clear,
+                                DS.Color.ink.opacity(0.25 + 0.65 * viewModel.holdProgress),
+                                DS.Color.ink.opacity(0.12 + 0.3 * viewModel.holdProgress),
+                                DS.Color.ink.opacity(0.03),
                             ],
                             center: .center,
                             startRadius: 10,
@@ -71,8 +71,8 @@ struct StillnessView: View {
                 Text(viewModel.holdProgress > 0
                     ? "\(Int(viewModel.holdProgress * 100))%"
                     : (vi ? "Giữ" : "Hold"))
-                    .font(DS.Font.serif(24, weight: .light))
-                    .foregroundColor(viewModel.holdProgress > 0.6 ? DS.Color.surface : DS.Color.ink)
+                    .font(DS.Font.serif(20, weight: .semibold))
+                    .foregroundColor(DS.Color.gold)
             }
             .frame(height: 280)
             .contentShape(Circle())

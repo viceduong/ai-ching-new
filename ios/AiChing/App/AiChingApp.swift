@@ -59,7 +59,7 @@ struct ContentView: View {
                     if viewModel.currentStep != .oracle {
                         SettingsButton(showDrawer: $showSettings)
                             .padding(.trailing, 12)
-                            .padding(.top, 12)
+                            .padding(.top, 60)
                     }
                 },
                 alignment: .topTrailing
