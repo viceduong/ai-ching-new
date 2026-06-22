@@ -18,20 +18,20 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
 
-      - name: Install XcodeGen 2.40
+      - name: Install XcodeGen
         run: |
-          curl -sL https://github.com/XcodeGen/XcodeGen/releases/download/2.40.0/xcodegen.zip -o /tmp/xcodegen.zip
-          unzip -q /tmp/xcodegen.zip -d /tmp/xcodegen
-          sudo cp /tmp/xcodegen/bin/xcodegen /usr/local/bin/
+          brew install xcodegen
           xcodegen --version
 
       - name: Generate Xcode Project
         run: |
           cd ios
-          xcodegen generate --spec project.yml
+          # Generate with format compatible with Xcode 15
+          xcodegen generate --spec project.yml --use-project-version 15.0
           echo "Generated Xcode project:"
           ls -la AiChing.xcodeproj/
-          cat AiChing.xcodeproj/project.pbxproj | head -5
+          # Verify format version
+          python3 -c "import plistlib; p=plistlib.load(open('AiChing.xcodeproj/project.pbxproj','rb')); print('Format:', p.get('archiveVersion','unknown'))"
 
       - name: Build iOS App
         run: |
@@ -83,9 +83,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Swift
-        uses: compnerd/gha-setup-swift@main
+        uses: swift-actions/setup-swift@v2
         with:
-          branch: swift-5.9-release
+          swift-version: "5.9"
 
       - name: Build AiChingCore
         run: |
