@@ -11,7 +11,7 @@ struct StillnessView: View {
     var body: some View {
         VStack(spacing: 0) {
             StepBadge(number: 1, label: t(L.Step.stillness, vi))
-                .padding(.top, DS.Spacing.md)
+                .padding(.top, 60)
 
             // Instruction
             VStack(spacing: DS.Spacing.sm) {

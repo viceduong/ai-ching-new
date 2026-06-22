@@ -162,35 +162,34 @@ struct PrimaryButton: View {
 
 struct LanguageToggle: View {
     @AppStorage("lang_vi") var isVietnamese = false
+    @Environment(\.colorScheme) var cs
 
     var body: some View {
         HStack(spacing: 0) {
-            // EN button
             Button(action: {
-                withAnimation(DS.Anim.spring) { isVietnamese = false }
+                isVietnamese = false
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }) {
                 Text("EN")
-                    .font(DS.Font.serif(13, weight: isVietnamese ? .regular : .semibold))
+                    .font(DS.Font.serif(14, weight: isVietnamese ? .regular : .bold))
                     .foregroundColor(isVietnamese ? DS.Color.inkFaded : Color.white)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 6)
+                    .frame(minWidth: 44)
+                    .padding(.vertical, 8)
                     .background(
                         RoundedRectangle(cornerRadius: DS.Radius.pill)
                             .fill(isVietnamese ? Color.clear : DS.Color.ink)
                     )
             }
 
-            // VI button
             Button(action: {
-                withAnimation(DS.Anim.spring) { isVietnamese = true }
+                isVietnamese = true
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
             }) {
                 Text("VI")
-                    .font(DS.Font.serif(13, weight: isVietnamese ? .semibold : .regular))
+                    .font(DS.Font.serif(14, weight: isVietnamese ? .bold : .regular))
                     .foregroundColor(isVietnamese ? Color.white : DS.Color.inkFaded)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 6)
+                    .frame(minWidth: 44)
+                    .padding(.vertical, 8)
                     .background(
                         RoundedRectangle(cornerRadius: DS.Radius.pill)
                             .fill(isVietnamese ? DS.Color.ink : Color.clear)
@@ -202,7 +201,7 @@ struct LanguageToggle: View {
                 .stroke(DS.Color.gold.opacity(0.4), lineWidth: 1)
                 .background(
                     RoundedRectangle(cornerRadius: DS.Radius.pill)
-                        .fill(DS.Color.surface)
+                        .fill(cs == .dark ? DS.Color.surface : Color.white)
                 )
         )
     }
