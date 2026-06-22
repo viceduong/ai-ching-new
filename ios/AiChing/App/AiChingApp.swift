@@ -27,7 +27,7 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            // Step router
+            // Step router with settings button as overlay
             Group {
                 switch viewModel.currentStep {
                 case .idle:
@@ -54,19 +54,18 @@ struct ContentView: View {
                 }
             }
             .animation(.easeInOut(duration: 0.4), value: viewModel.currentStep)
-
-            // Settings button (top-right, hidden during oracle)
-            if viewModel.currentStep != .oracle {
-                VStack {
-                    HStack {
-                        Spacer()
+            .overlay(
+                Group {
+                    if viewModel.currentStep != .oracle {
                         SettingsButton(showDrawer: $showSettings)
+                            .padding(.trailing, 12)
+                            .padding(.top, 12)
                     }
-                    Spacer()
-                }
-            }
+                },
+                alignment: .topTrailing
+            )
 
-            // Settings drawer overlay
+                        // Settings drawer overlay
             SettingsDrawer(isOpen: $showSettings)
         }
         .ignoresSafeArea()
