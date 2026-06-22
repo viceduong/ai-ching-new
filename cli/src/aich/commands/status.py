@@ -64,13 +64,18 @@ def _show_run_detail(gh: GitHubClient, repo: str, run_id: int) -> int:
         print(f"[!!]  {e}")
         return 1
 
-    print(f"\nRun #{run.id}  -  {run.name}")
-    print(f"{'-' * 40}")
-    print(f"  Status:      {run.status}")
-    print(f"  Conclusion:  {run.conclusion or '-'}")
-    print(f"  Branch:      {run.branch}")
-    print(f"  Commit:      {run.head_sha}")
-    print(f"  Created:     {run.created_at}")
-    print(f"  Updated:     {run.updated_at}")
-    print(f"  URL:         {run.html_url}")
+    def p(s: str) -> None:
+        try:
+            print(s)
+        except UnicodeEncodeError:
+            print(_safe(s))
+    p(f"\nRun #{run.id}  -  {run.name}")
+    p(f"{'-' * 40}")
+    p(f"  Status:      {run.status}")
+    p(f"  Conclusion:  {run.conclusion or '-'}")
+    p(f"  Branch:      {run.branch}")
+    p(f"  Commit:      {run.head_sha}")
+    p(f"  Created:     {run.created_at}")
+    p(f"  Updated:     {run.updated_at}")
+    p(f"  URL:         {run.html_url}")
     return 0

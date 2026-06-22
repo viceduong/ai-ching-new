@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import io
+import re
 import sys
 import time
 from typing import TYPE_CHECKING
@@ -55,6 +57,13 @@ def run(args: Namespace) -> int:
         return _fetch_logs(gh, repo, run_id, args.tail)
 
 
+def _sanitize(text: str) -> str:
+    """Strip characters that Windows console (cp1252) can't display."""
+    # Keep common printable ASCII + newlines
+    safe = re.sub(r'[^\x20-\x7e\n\r\t]', '', text)
+    return safe
+
+
 def _fetch_logs(gh: GitHubClient, repo: str, run_id: int, tail: int = 0) -> int:
     try:
         text = gh.stream_logs(repo, run_id)
@@ -62,12 +71,16 @@ def _fetch_logs(gh: GitHubClient, repo: str, run_id: int, tail: int = 0) -> int:
         print(f"[!!]  {e}", file=sys.stderr)
         return 1
 
+    text = _sanitize(text)
     lines = text.splitlines()
     if tail > 0 and len(lines) > tail:
         lines = lines[-tail:]
 
     for line in lines:
-        print(line)
+        try:
+            print(line)
+        except UnicodeEncodeError:
+            print(line.encode('ascii', errors='replace').decode('ascii'))
 
     print(f"\n-- {len(lines)} lines --")
     print(f"Run #{run_id}: https://github.com/{repo}/actions/runs/{run_id}")
@@ -81,12 +94,15 @@ def _watch_logs(gh: GitHubClient, repo: str, run_id: int) -> int:
 
     try:
         while True:
-            text = gh.stream_logs(repo, run_id)
+            text = _sanitize(gh.stream_logs(repo, run_id))
             lines = text.splitlines()
 
             if len(lines) > last_len:
                 for line in lines[last_len:]:
-                    print(line)
+                    try:
+                        print(line)
+                    except UnicodeEncodeError:
+                        print(line.encode('ascii', errors='replace').decode('ascii'))
                 last_len = len(lines)
 
             run = gh.get_run(repo, run_id)

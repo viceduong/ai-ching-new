@@ -6,10 +6,12 @@ Rate-limit aware, pagination via Link header, JSON only.
 
 from __future__ import annotations
 
+import io
 import json
 import time
 import urllib.error
 import urllib.request
+import zipfile
 from dataclasses import dataclass
 from typing import Any
 from urllib.parse import urlencode
@@ -131,14 +133,30 @@ class GitHubClient:
     # -- Logs ----------------------------------------------
 
     def stream_logs(self, repo: str, run_id: int, tail: int = 0) -> str:
-        """Fetch (optionally tail) the full log for a workflow run."""
+        """Fetch the combined log for a workflow run.
+        The API returns a zip of individual log files; we extract and merge them.
+        """
         url = f"{API_ROOT}/repos/{repo}/actions/runs/{run_id}/logs"
         req = urllib.request.Request(url, headers=self._headers)
         try:
             with urllib.request.urlopen(req) as resp:
-                return resp.read().decode("utf-8", errors="replace")
+                raw = resp.read()
         except urllib.error.HTTPError as e:
             raise GitHubError(e.code, e.read().decode(), url) from e
+
+        # Extract from zip
+        parts: list[str] = []
+        try:
+            z = zipfile.ZipFile(io.BytesIO(raw))
+            for name in sorted(z.namelist()):
+                if name.endswith(".txt"):
+                    content = z.read(name).decode("utf-8", errors="replace")
+                    parts.append(content)
+        except zipfile.BadZipFile:
+            # Some endpoints return plain text, not zip
+            return raw.decode("utf-8", errors="replace")
+
+        return "\n".join(parts)
 
     # -- Artifacts -----------------------------------------
 
