@@ -170,12 +170,11 @@ struct OracleView: View {
     }
 
     // MARK: - Hexagram Analysis Block
-    func hexagramAnalysis(data: OracleDisplayData, isSecondary: Bool) -> some View {
+    func hexagramAnalysis(data: OracleDisplayData, isSecondary: Bool) -> AnyView {
         let hex = isSecondary ? data.secondaryHexagram : data.primaryHexagram
         guard let h = hex else { return AnyView(EmptyView()) }
 
-        return AnyView(
-            VStack(spacing: DS.Spacing.md) {
+        return AnyView(VStack(spacing: DS.Spacing.md) {
                 // Chinese name
                 Text(h.chineseName)
                     .font(DS.Font.chinese(52))

@@ -32,12 +32,14 @@ struct InquiryView: View {
                     .font(DS.Font.serif(12, weight: .semibold))
                     .foregroundColor(DS.Color.inkFaded)
 
-                ForEach([L.Inquiry.ex1, L.Inquiry.ex2, L.Inquiry.ex3], id: \.en) { ex in
+                let examples = [L.Inquiry.ex1, L.Inquiry.ex2, L.Inquiry.ex3]
+                ForEach(0..<3, id: \.self) { idx in
                     Button(action: {
-                        viewModel.questionText = t(ex, vi)
-                        viewModel.registerKeystroke(character: String(t(ex, vi).last ?? " "))
+                        let q = examples[idx]
+                        viewModel.questionText = t(q, vi)
+                        viewModel.registerKeystroke(character: String(t(q, vi).last ?? " "))
                     }) {
-                        Text(t(ex, vi))
+                        Text(t(examples[idx], vi))
                             .font(DS.Font.serif(13))
                             .foregroundColor(DS.Color.gold)
                             .lineLimit(1)

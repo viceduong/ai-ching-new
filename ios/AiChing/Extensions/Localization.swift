@@ -16,6 +16,7 @@ enum L {
         static let computation = ("Computation", "Diễn quái")
         static let override = ("Intuition", "Cảm ứng")
         static let oracle = ("The Oracle", "Khai thị")
+    static let oracleSub = ("The oracle has spoken.", "Quái tượng đã hiện.")
     }
 
     enum Idle {
