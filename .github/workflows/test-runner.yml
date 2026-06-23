@@ -1,0 +1,7 @@
+name: Test macOS runner
+on: workflow_dispatch
+jobs:
+  test:
+    runs-on: macos-14
+    steps:
+      - run: echo "Runner works" && sw_vers
