@@ -8,6 +8,12 @@ on:
   workflow_dispatch:
 
 jobs:
+  test-runner:
+    name: Test Runner
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Runner works - $(date)"
+
   build-ios:
     name: Build AiChing (iOS)
     runs-on: macos-14
@@ -68,5 +74,4 @@ jobs:
           path: AiChing.ipa
           retention-days: 7
 
-  # Removed build-core and build-windows-swift jobs to reduce runner demand.
-  # Run them manually via `aich test` or `swift build` in the AiChingCore package.
+
