@@ -8,12 +8,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  test-runner:
-    name: Test Runner
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Runner works - $(date)"
-
   build-ios:
     name: Build AiChing (iOS)
     runs-on: macos-14
