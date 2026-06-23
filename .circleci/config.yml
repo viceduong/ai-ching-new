@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  xcode: circleci/xcode@5.0.0
-
 jobs:
   build-ios:
     macos:
@@ -12,17 +9,12 @@ jobs:
       - checkout
       - run:
           name: Install XcodeGen
-          command: |
-            HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
-      - run:
-          name: Generate Xcode Project
-          command: |
-            cd ios
-            xcodegen generate --spec project.yml
+          command: HOMEBREW_NO_AUTO_UPDATE=1 brew install xcodegen
       - run:
           name: Build iOS App
           command: |
             cd ios
+            xcodegen generate --spec project.yml
             xcodebuild \
               -project AiChing.xcodeproj \
               -scheme AiChing \
@@ -31,8 +23,7 @@ jobs:
               clean build \
               CODE_SIGN_IDENTITY="" \
               CODE_SIGNING_REQUIRED=NO \
-              CODE_SIGNING_ALLOWED=NO \
-              PRODUCT_BUNDLE_IDENTIFIER=com.aiching.app
+              CODE_SIGNING_ALLOWED=NO
       - run:
           name: Package .ipa
           command: |
