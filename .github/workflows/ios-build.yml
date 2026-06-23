@@ -10,7 +10,7 @@ on:
 jobs:
   build-ios:
     name: Build AiChing (iOS)
-    runs-on: macos-latest  # let GitHub choose the best available macOS version
+    runs-on: macos-15
 
     steps:
       - uses: actions/checkout@v4
