@@ -124,7 +124,7 @@ struct SplitsView: View {
                 lastShown = viewModel.currentSplitIndex
                 withAnimation(.spring(response: 0.4)) { showResult = true }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                    withAnimation(.easeOut()) { showResult = false }
+                    withAnimation(.easeOut(duration: 0.3)) { showResult = false }
                 }
             }
         }
