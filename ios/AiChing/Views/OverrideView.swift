@@ -1,155 +1,106 @@
 import SwiftUI
 
-// MARK: - Step 5: Intuition Override
+// MARK: - Step 5: Intuition Override — Tap the Lines
 struct OverrideView: View {
     @ObservedObject var viewModel: RitualViewModel
     @AppStorage("lang_vi") var isVietnamese = false
 
     var vi: Bool { isVietnamese }
 
-    private let labels = [
-        Localized("Bottom (1st)", "Sơ (Hào 1)"),
-        Localized("2nd", "Nhị (Hào 2)"),
-        Localized("3rd", "Tam (Hào 3)"),
-        Localized("4th", "Tứ (Hào 4)"),
-        Localized("5th", "Ngũ (Hào 5)"),
-        Localized("Top (6th)", "Thượng (Hào 6)")
-    ]
-
     var body: some View {
         VStack(spacing: 0) {
-            StepBadge(number: 5, label: t(L.Step.override, vi))
-                .padding(.top, 60)
+            Spacer().frame(height: 60)
 
-            Text(t(L.Override.instruction, vi))
-                .font(DS.Font.serif(13))
-                .foregroundColor(DS.Color.ink.opacity(0.65))
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal, DS.Spacing.xl)
-                .padding(.top, DS.Spacing.sm)
+            // Title
+            VStack(spacing: 4) {
+                Text(t(L.Override.title, vi))
+                    .font(DS.Font.serif(20, weight: .light))
+                    .foregroundColor(DS.Color.ink)
+                Text(vi ? "Chạm để thay đổi" : "Tap a line to change")
+                    .font(DS.Font.serif(12))
+                    .foregroundColor(DS.Color.inkFaded)
+                    .italic()
+            }
+            .padding(.bottom, DS.Spacing.lg)
 
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: DS.Spacing.md) {
-                    if let result = viewModel.computedResult {
-                        HexagramHeader(index: result.primaryIndex, vi: vi)
+            // The hexagram - tappable lines
+            if let result = viewModel.computedResult {
+                VStack(spacing: 6) {
+                    // Chinese name
+                    Text(HexagramService.shared.hexagram(at: result.primaryIndex)?.chineseName ?? "")
+                        .font(DS.Font.chinese(28))
+                        .foregroundColor(DS.Color.ink.opacity(0.5))
 
-                        // Lines using HexagramView
-                        VStack(spacing: 8) {
-                            ForEach((0..<6).reversed(), id: \.self) { i in
-                                let displayIdx = 5 - i
-                                let val = viewModel.overriddenLines[safe: displayIdx] ?? .youngYin
-                                let isYang = val == .youngYang || val == .oldYang
-                                let isMoving = val == .oldYin || val == .oldYang
+                    // 6 tappable lines
+                    ForEach((0..<6).reversed(), id: \.self) { i in
+                        let displayIdx = 5 - i
+                        let val = viewModel.overriddenLines[safe: displayIdx] ?? .youngYin
+                        let isYang = val == .youngYang || val == .oldYang
+                        let isMoving = val == .oldYin || val == .oldYang
 
-                                Button(action: { viewModel.toggleLine(at: displayIdx) }) {
-                                    HStack {
-                                        Text(labels[safe: displayIdx]?.text(vi) ?? "Line \(displayIdx+1)")
-                                            .font(DS.Font.serif(12))
-                                            .foregroundColor(DS.Color.inkFaded)
-                                            .frame(width: 80, alignment: .leading)
-
-                                        Spacer()
-
-                                        HStack(spacing: 4) {
-                                            if isYang {
-                                                Capsule().fill(isMoving ? DS.Color.crimson : DS.Color.ink)
-                                                    .frame(width: 56, height: 4)
-                                            } else {
-                                                Capsule().fill(isMoving ? DS.Color.crimson : DS.Color.ink)
-                                                    .opacity(isMoving ? 0.9 : 0.5)
-                                                    .frame(width: 26, height: 4)
-                                                Capsule().fill(isMoving ? DS.Color.crimson : DS.Color.ink)
-                                                    .opacity(isMoving ? 0.9 : 0.5)
-                                                    .frame(width: 26, height: 4)
-                                            }
-                                        }
-
-                                        Spacer()
-
-                                        VStack(alignment: .trailing, spacing: 1) {
-                                            Text(val.chineseChar)
-                                                .font(DS.Font.serif(10))
-                                                .foregroundColor(isMoving ? DS.Color.crimson : DS.Color.inkFaded)
-                                            Text("\(val.rawValue)")
-                                                .font(DS.Font.mono(9))
-                                                .foregroundColor(DS.Color.inkFaded.opacity(0.5))
-                                        }
-                                    }
-                                    .padding(.horizontal, DS.Spacing.sm)
-                                    .padding(.vertical, 8)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: DS.Radius.sm)
-                                            .fill(isMoving ? DS.Color.crimson.opacity(0.06) : Color.clear)
-                                    )
-                                }
-                                .buttonStyle(PlainButtonStyle())
-                            }
+                        Button(action: { viewModel.toggleLine(at: displayIdx) }) {
+                            TappableLine(
+                                isYang: isYang,
+                                isMoving: isMoving,
+                                isActive: viewModel.isOverriding && viewModel.hasOverridden
+                            )
+                            .frame(maxWidth: .infinity)
                         }
-                        .padding(DS.Spacing.sm)
-                        .background(
-                            RoundedRectangle(cornerRadius: DS.Radius.md)
-                                .fill(DS.Color.surfaceElevated)
-                                .shadow(color: .black.opacity(0.04), radius: 4, x: 0, y: 1)
-                        )
-                        .padding(.horizontal, DS.Spacing.lg)
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
-                .padding(.vertical, DS.Spacing.md)
-            }
-
-            // Secondary hexagram preview
-            if let result = viewModel.computedResult, result.hasMovingLines {
-                HStack(spacing: 6) {
-                    Text(t(L.Override.forming, vi))
-                        .font(DS.Font.serif(12))
-                        .foregroundColor(DS.Color.inkFaded)
-                    Image(systemName: "arrow.right").font(.caption).foregroundColor(DS.Color.gold)
-                    Text(HexagramService.shared.name(for: result.secondaryIndex ?? 0))
-                        .font(DS.Font.serif(13, weight: .semibold))
-                        .foregroundColor(DS.Color.gold)
-                }
-                .padding(.top, DS.Spacing.xs)
+                .padding(.horizontal, DS.Spacing.xl)
             }
 
             Spacer()
 
-            PrimaryButton(title: t(L.Override.accept, vi), subtitle: nil) {
+            // Accept — just a subtle text button
+            Button(action: {
                 withAnimation(DS.Anim.default) { viewModel.acceptOracle() }
+            }) {
+                Text(t(L.Override.accept, vi))
+                    .font(DS.Font.serif(15, weight: .medium))
+                    .foregroundColor(DS.Color.gold)
+                    .padding(.vertical, DS.Spacing.sm)
             }
-            .padding(.bottom, DS.Spacing.lg)
+
+            Spacer().frame(height: 50)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(RitualBackground())
     }
 }
 
-// MARK: - Hexagram Header with Chinese name + seal
-struct HexagramHeader: View {
-    let index: Int
-    let vi: Bool
+// MARK: - Tappable Line
+struct TappableLine: View {
+    let isYang: Bool
+    let isMoving: Bool
+    let isActive: Bool
 
     var body: some View {
-        if let hex = HexagramService.shared.hexagram(at: index) {
-            VStack(spacing: 8) {
-                Text(hex.chineseName)
-                    .font(DS.Font.chinese(40))
-                    .foregroundColor(DS.Color.ink.opacity(0.6))
-
-                HStack(spacing: 10) {
-                    SealStampView(text: hex.chineseName, size: 32)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(hex.name)
-                            .font(DS.Font.serif(15, weight: .semibold))
-                            .foregroundColor(DS.Color.ink)
-                        if let viName = hex.nameVi {
-                            Text(viName)
-                                .font(DS.Font.serif(12))
-                                .foregroundColor(DS.Color.gold.opacity(0.7))
-                        }
-                    }
+        HStack {
+            Spacer()
+            if isYang {
+                Capsule()
+                    .fill(isMoving ? DS.Color.crimson : DS.Color.ink)
+                    .frame(width: 200, height: 6)
+                    .opacity(isActive ? 1.0 : 0.7)
+            } else {
+                HStack(spacing: 14) {
+                    Capsule()
+                        .fill(isMoving ? DS.Color.crimson : DS.Color.ink)
+                        .frame(width: 93, height: 6)
+                        .opacity(isActive ? 1.0 : 0.7)
+                    Capsule()
+                        .fill(isMoving ? DS.Color.crimson : DS.Color.ink)
+                        .frame(width: 93, height: 6)
+                        .opacity(isActive ? 1.0 : 0.7)
                 }
             }
-            .padding(.top, DS.Spacing.sm)
+            Spacer()
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 4)
+        .contentShape(Rectangle())
     }
 }
