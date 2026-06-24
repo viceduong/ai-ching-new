@@ -92,7 +92,9 @@ struct SplitsView: View {
                                 }
                                 .onEnded { _ in
                                     withAnimation(DS.Anim.default) {
-                                        viewModel.completeCurrentSplit()
+                                        let maxOffset = geo.size.width - 80 - handleWidth
+                                        let pct = maxOffset > 0 ? Double(dragOffset / maxOffset) : 0.5
+                                        viewModel.completeSplit(percentage: pct, speed: 0, jitter: [], trajectory: [])
                                         dragOffset = 0
                                     }
                                 }
