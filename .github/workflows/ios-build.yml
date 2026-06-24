@@ -10,7 +10,7 @@ on:
 jobs:
   build-ios:
     name: Build AiChing (iOS)
-    runs-on: macos-14
+    runs-on: macos-15
 
     steps:
       - uses: actions/checkout@v4
@@ -18,22 +18,17 @@ jobs:
       - name: Use default Xcode
         run: xcode-select -p && xcodebuild -version
 
-      - name: Install XcodeGen 2.35
+      - name: Install XcodeGen
         run: |
-          curl -sL https://github.com/XcodeGen/XcodeGen/releases/download/2.35.0/xcodegen.zip -o /tmp/xg.zip
-          unzip -q /tmp/xg.zip -d /tmp/xg
-          sudo cp /tmp/xg/bin/xcodegen /usr/local/bin/xcodegen
+          brew install xcodegen
           xcodegen --version
 
-      - name: Generate Xcode Project (pre-compat mode)
+      - name: Generate Xcode Project
         run: |
           cd ios
-          xcodegen --version
           xcodegen generate --spec project.yml
-          echo "Generated Xcode project:"
+          echo "Generated:"
           ls -la AiChing.xcodeproj/
-          # Show project format
-          head -3 AiChing.xcodeproj/project.pbxproj
 
       - name: Build iOS App (device)
         run: |
