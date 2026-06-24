@@ -50,7 +50,6 @@ struct InquiryView: View {
                         .font(DS.Font.serif(20, weight: .light))
                         .foregroundColor(DS.Color.ink)
                         .hideScrollBackground()
-                        .scrollContentBackground(.hidden)
                         .frame(minHeight: 140, maxHeight: 200)
                         .padding(12)
                         .focused($isFocused)
