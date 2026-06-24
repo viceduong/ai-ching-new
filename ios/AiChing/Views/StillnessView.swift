@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - Step 1: Stillness with Bagua Mandala
+// MARK: - Step 1: Stillness
 struct StillnessView: View {
     @ObservedObject var viewModel: RitualViewModel
     @AppStorage("lang_vi") var isVietnamese = false
@@ -11,72 +11,71 @@ struct StillnessView: View {
 
     var vi: Bool { isVietnamese }
 
-    // Four symbols (Tứ Tượng) at cardinal directions
+    // Four Tứ Tượng trigrams at cardinal directions
     private let fourSymbols: [(name: String, lines: [Bool], angle: Double)] = [
-        ("Thái Dương", [true, true, true], 270),    // ☰ Heaven, top
-        ("Thiếu Âm",  [true, true, false], 0),       // ☱ Lake, right
-        ("Thái Âm",   [false, false, false], 90),    // ☷ Earth, bottom
-        ("Thiếu Dương", [false, true, true], 180),   // ☳ Thunder, left
+        ("Thái Dương", [true, true, true], 270),
+        ("Thiếu Âm",  [true, true, false], 0),
+        ("Thái Âm",   [false, false, false], 90),
+        ("Thiếu Dương", [false, true, true], 180),
     ]
 
     var body: some View {
         VStack(spacing: 0) {
-            StepBadge(number: 1, label: t(L.Step.stillness, vi))
-                .padding(.top, 60)
+            Spacer().frame(height: 80)
 
+            // Minimal instruction
+            Text(t(L.Stillness.title, vi))
+                .font(DS.Font.serif(22, weight: .light))
+                .foregroundColor(DS.Color.ink)
             Text(t(L.Stillness.instruction, vi))
-                .font(DS.Font.serif(14))
-                .foregroundColor(DS.Color.ink.opacity(0.65))
+                .font(DS.Font.serif(13))
+                .foregroundColor(DS.Color.inkFaded)
+                .italic()
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, DS.Spacing.xl)
-                .padding(.top, DS.Spacing.sm)
+                .padding(.top, 4)
 
-            Spacer().frame(height: 30)
+            Spacer()
 
-            // Bagua Mandala: 4 trigrams around central hold circle
+            // CENTERED: Mandala with 4 trigrams around YinYang center
             ZStack {
-                // Outer rotating ring with all 8 trigrams
-                BaguaCompass(size: 280)
+                // Outer rotating ring
+                Circle()
+                    .stroke(DS.Color.gold.opacity(0.2), lineWidth: 1)
+                    .frame(width: 280, height: 280)
                     .rotationEffect(.degrees(outerRotation))
-                    .opacity(0.35)
 
-                // Decorative rings
+                // Decorative ring
                 Circle()
-                    .stroke(DS.Color.gold.opacity(0.3), lineWidth: 1.5)
+                    .stroke(DS.Color.gold.opacity(0.1), style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
                     .frame(width: 240, height: 240)
-                    .scaleEffect(breathScale)
 
-                Circle()
-                    .stroke(DS.Color.gold.opacity(0.15), style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
-                    .frame(width: 220, height: 220)
-
-                // Four Tứ Tượng trigrams at cardinal points
+                // 4 Tứ Tượng trigrams
                 ForEach(0..<fourSymbols.count, id: \.self) { idx in
                     let sym = fourSymbols[idx]
                     let rad = sym.angle * .pi / 180
                     let r: CGFloat = 130
                     let x = cos(rad) * r
                     let y = sin(rad) * r
-
-                    VStack(spacing: 3) {
-                        TrigramView(lines: sym.lines, width: 26, isHighlighted: false)
+                    VStack(spacing: 2) {
+                        TrigramView(lines: sym.lines, width: 22, isHighlighted: false)
                         Text(sym.name)
                             .font(DS.Font.serif(7))
                             .foregroundColor(DS.Color.gold.opacity(0.5))
                     }
                     .offset(x: x, y: y)
-                    .opacity(0.7)
+                    .opacity(0.65)
                 }
 
                 // Progress arc
                 Circle()
                     .trim(from: 0, to: viewModel.holdProgress)
-                    .stroke(DS.Color.crimson, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                    .stroke(DS.Color.crimson, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
                     .frame(width: 200, height: 200)
                     .rotationEffect(.degrees(-90))
 
-                // Ripple ring (accelerometer)
+                // Ripple ring
                 Circle()
                     .stroke(DS.Color.gold.opacity(0.3), lineWidth: 1)
                     .frame(width: 180, height: 180)
@@ -84,7 +83,7 @@ struct StillnessView: View {
                     .offset(rippleOffset)
                     .opacity(viewModel.isHolding ? 0.6 : 0)
 
-                // Ink pool (hold progress)
+                // Ink pool
                 Circle()
                     .fill(
                         RadialGradient(
@@ -101,20 +100,16 @@ struct StillnessView: View {
                     .frame(width: 160, height: 160)
                     .offset(touchOffset)
 
-                // Yin-Yang center
+                // YinYang center
                 YinYangView(size: 50)
-                    .opacity(0.85)
 
                 // Hold progress text
-                Text(viewModel.holdProgress > 0
-                    ? "\(Int(viewModel.holdProgress * 100))%"
-                    : (vi ? "Giữ" : "Hold"))
-                    .font(DS.Font.serif(18, weight: .bold))
-                    .foregroundColor(viewModel.holdProgress > 0.4
-                        ? DS.Color.surface
-                        : DS.Color.gold)
-                    .offset(y: 75)
-                    .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+                if viewModel.holdProgress > 0 {
+                    Text("\(Int(viewModel.holdProgress * 100))%")
+                        .font(DS.Font.serif(18, weight: .bold))
+                        .foregroundColor(viewModel.holdProgress > 0.4 ? DS.Color.surface : DS.Color.gold)
+                        .offset(y: 75)
+                }
             }
             .frame(width: 300, height: 300)
             .contentShape(Rectangle())
@@ -141,36 +136,28 @@ struct StillnessView: View {
                     }
             )
 
+            Spacer()
+
             // Status
             if viewModel.holdFailed {
                 Text(t(L.Stillness.tooSoon, vi))
-                    .font(DS.Font.serif(13))
+                    .font(DS.Font.serif(14))
                     .foregroundColor(DS.Color.crimson)
-                    .padding(.top, DS.Spacing.sm)
-            } else if viewModel.isHolding && viewModel.holdProgress > 0 {
+                    .padding(.bottom, DS.Spacing.md)
+            } else if viewModel.isHolding {
                 let remaining = Int(viewModel.holdTargetDuration - Date().timeIntervalSince(viewModel.holdStartTime ?? Date()))
-                HStack(spacing: 8) {
-                    Image(systemName: "timer").font(.caption)
-                    Text("\(max(remaining, 0))s").font(DS.Font.serif(14, weight: .semibold))
-                }
-                .foregroundColor(DS.Color.crimson)
-                .padding(.top, DS.Spacing.sm)
-                .transition(.opacity)
+                Text("\(max(remaining, 0))s")
+                    .font(DS.Font.serif(14, weight: .semibold))
+                    .foregroundColor(DS.Color.crimson)
+                    .padding(.bottom, DS.Spacing.md)
+                    .transition(.opacity)
             }
 
-            Spacer()
-
-            Text(t(L.Stillness.hint, vi))
-                .font(DS.Font.serif(11))
-                .foregroundColor(DS.Color.inkFaded.opacity(0.45))
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, DS.Spacing.xl)
-                .padding(.bottom, DS.Spacing.lg)
+            Spacer().frame(height: 80)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(RitualBackground())
         .onAppear {
-            viewModel.holdFailed = false
-            viewModel.holdProgress = 0
             withAnimation(.easeInOut(duration: 30).repeatForever(autoreverses: false)) {
                 outerRotation = 360
             }
