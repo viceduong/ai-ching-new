@@ -1,140 +1,209 @@
 import SwiftUI
 
-// MARK: - Step 3: The Six Splits (Yarrow Stalk Casting)
+// MARK: - Step 3: The Six Splits (Virtual Yarrow Ritual)
+/// User drags a golden handle across a bundle of 50 stalks, 6 times (once per line).
+/// Each split captures fine motor entropy: position, speed, jitter, trajectory.
 struct SplitsView: View {
     @ObservedObject var viewModel: RitualViewModel
-    @AppStorage("lang_vi") var isVietnamese = false
-    @State private var splitPosition: Double = 0.5
-    @State private var showResult: Bool = false
-    @State private var lastShown: Int = -1
 
-    var vi: Bool { isVietnamese }
-    private let totalLines = 6
+    @State private var dragOffset: CGFloat = 0
+    @State private var dragTrajectory: [CGPoint] = []
+    @State private var lastDragPosition: CGPoint?
+    @State private var dragStartTime: Date?
+    @State private var totalDragDistance: CGFloat = 0
+    @State private var stalkWidth: CGFloat = 0
+
+    private let stalkCount = 50
+    private let handleWidth: CGFloat = 44
 
     var body: some View {
-        GeometryReader { geo in
+        GeometryReader { geometry in
             VStack(spacing: 0) {
-                Spacer().frame(height: 50)
+                // Step indicator
+                StepProgressView(currentStep: .splits)
+                    .padding(.top, 16)
+                    .padding(.bottom, 8)
 
-                // Step counter
-                HStack(spacing: 8) {
-                    TrigramView(lines: [true, true, true], width: 18, isHighlighted: true)
-                    Text("\(viewModel.currentSplitIndex + 1) / \(totalLines)")
-                        .font(DS.Font.serif(20, weight: .semibold))
-                        .foregroundColor(DS.Color.ink)
-                }
+                // Title
+                Text("分 蓍")
+                    .font(.system(.title, design: .serif))
+                    .fontWeight(.light)
+                    .foregroundColor(.inkBlack)
+                    .opacity(0.7)
 
-                Text(t(L.Splits.instruction, vi))
-                    .font(DS.Font.serif(14))
-                    .foregroundColor(DS.Color.inkFaded)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, DS.Spacing.xl)
-                    .padding(.top, DS.Spacing.md)
+                Text("Splitting the Stalks")
+                    .font(.system(.subheadline, design: .serif))
+                    .foregroundColor(.inkBlack.opacity(0.4))
+                    .italic()
+
+                // Line counter
+                Text("Line \(viewModel.currentSplitIndex + 1) of 6")
+                    .font(.system(.caption, design: .serif))
+                    .foregroundColor(.gold.opacity(0.7))
+                    .padding(.top, 12)
 
                 Spacer()
 
-                // CENTERED: Tap anywhere on the bundle to cast a line
-                ZStack {
-                    // Bundle background
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(DS.Color.surface.opacity(0.6))
-                        .frame(width: 200, height: 200)
+                // Instruction
+                Text("Drag the handle to where it feels right.")
+                    .font(.system(.body, design: .serif))
+                    .foregroundColor(.inkBlack.opacity(0.6))
+                    .padding(.horizontal, 32)
+
+                Spacer()
+
+                // Stalk bundle
+                VStack(spacing: 4) {
+                    ZStack(alignment: .leading) {
+                        // Stalk lines
+                        HStack(spacing: 2) {
+                            ForEach(0..<stalkCount, id: \.self) { i in
+                                // Determine if this stalk is on left or right of split
+                                let splitIndex = Int(
+                                    (CGFloat(stalkCount)) * (viewModel.splitProgress[viewModel.currentSplitIndex])
+                                )
+                                let isLeft = i < splitIndex
+
+                                Rectangle()
+                                    .fill(isLeft
+                                        ? Color.inkBlack.opacity(0.6)
+                                        : Color.inkBlack.opacity(0.3))
+                                    .frame(width: max(1, (geometry.size.width - 80) / CGFloat(stalkCount)))
+                                    .frame(maxHeight: .infinity)
+                            }
+                        }
+                        .frame(height: 200)
+                        .background(
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(Color.ricePaper)
+                                .shadow(color: .black.opacity(0.05), radius: 2)
+                        )
                         .overlay(
-                            RoundedRectangle(cornerRadius: 6)
-                                .stroke(DS.Color.gold.opacity(0.15), lineWidth: 0.5)
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(Color.inkBlack.opacity(0.1), lineWidth: 0.5)
                         )
 
-                    // 50 vertical stalks with split indicator
-                    ForEach(0..<50, id: \.self) { i in
-                        let xPos = (CGFloat(i) / 49) * 180 - 90
-                        let splitIdx = Int(50 * splitPosition)
-                        let isLeft = i < splitIdx
-                        Capsule()
-                            .fill(isLeft ? DS.Color.ink.opacity(0.75) : DS.Color.ink.opacity(0.3))
-                            .frame(width: 2.5, height: 160)
-                            .offset(x: xPos, y: 0)
+                        // Golden drag handle
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(
+                                LinearGradient(
+                                    colors: [.gold, .gold.opacity(0.7), .gold],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                            .frame(width: handleWidth, height: 210)
+                            .shadow(color: .gold.opacity(0.3), radius: 4, x: 0, y: 2)
+                            .overlay(
+                                Image(systemName: "line.horizontal.3")
+                                    .font(.caption)
+                                    .foregroundColor(.inkBlack.opacity(0.5))
+                            )
+                            .offset(x: dragOffset)
+                            .gesture(
+                                DragGesture()
+                                    .onChanged { value in
+                                        let newOffset = min(
+                                            max(value.translation.width, 0),
+                                            geometry.size.width - 80 - handleWidth
+                                        )
+                                        dragOffset = newOffset
+
+                                        // Track trajectory for entropy
+                                        let pos = value.location
+                                        dragTrajectory.append(pos)
+
+                                        if let last = lastDragPosition {
+                                            totalDragDistance += hypot(pos.x - last.x, pos.y - last.y)
+                                        }
+                                        lastDragPosition = pos
+
+                                        if dragStartTime == nil {
+                                            dragStartTime = Date()
+                                        }
+
+                                        // Update split percentage
+                                        let maxOffset = geometry.size.width - 80 - handleWidth
+                                        let percentage = maxOffset > 0 ? Double(dragOffset / maxOffset) : 0.5
+
+                                        viewModel.updateSplit(
+                                            percentage: percentage,
+                                            speed: 0,
+                                            jitter: [],
+                                            trajectory: dragTrajectory
+                                        )
+                                    }
+                                    .onEnded { _ in
+                                        let maxOffset = geometry.size.width - 80 - handleWidth
+                                        let percentage = maxOffset > 0 ? Double(dragOffset / maxOffset) : 0.5
+
+                                        // Calculate speed
+                                        let duration = dragStartTime.map { Date().timeIntervalSince($0) } ?? 1
+                                        let speed = duration > 0 ? Double(totalDragDistance) / duration : 0
+
+                                        // Calculate jitter (variance of x-positions)
+                                        let xPositions = dragTrajectory.map(\.x)
+                                        let meanX = xPositions.reduce(0, +) / max(1, Double(xPositions.count))
+                                        let variance = xPositions.reduce(0) { $0 + ($1 - meanX) * ($1 - meanX) }
+                                        let jitter = xPositions.count > 0 ? [variance / Double(xPositions.count)] : [0.0]
+
+                                        viewModel.completeSplit(
+                                            percentage: percentage,
+                                            speed: speed,
+                                            jitter: jitter,
+                                            trajectory: dragTrajectory
+                                        )
+
+                                        // Reset drag state
+                                        dragOffset = 0
+                                        dragTrajectory = []
+                                        lastDragPosition = nil
+                                        dragStartTime = nil
+                                        totalDragDistance = 0
+                                    }
+                            )
                     }
-
-                    // Split line indicator
-                    Rectangle()
-                        .fill(DS.Color.gold.opacity(0.6))
-                        .frame(width: 2, height: 170)
-                        .offset(x: CGFloat(splitPosition) * 180 - 90, y: 0)
-
-                    // Result trigram overlay
-                    if showResult {
-                        TrigramView(lines: [true, true, true], width: 50, isHighlighted: true)
-                            .offset(y: -110)
-                            .scaleEffect(1.0)
-                            .transition(.scale)
-                    }
+                    .padding(.horizontal, 32)
                 }
-                .frame(width: 220, height: 200)
-                .contentShape(Rectangle())
-                .gesture(
-                    DragGesture(minimumDistance: 0)
-                        .onChanged { val in
-                            let progress = max(0, min(1, val.location.x / 200))
-                            splitPosition = progress
-                        }
-                        .onEnded { _ in
-                            commitSplit()
-                        }
-                )
-
-                // Direction labels
-                HStack {
-                    Text(vi ? "Trái" : "Left")
-                        .font(DS.Font.serif(11))
-                        .foregroundColor(DS.Color.inkFaded)
-                    Spacer()
-                    Text(vi ? "Phải" : "Right")
-                        .font(DS.Font.serif(11))
-                        .foregroundColor(DS.Color.inkFaded)
-                }
-                .padding(.horizontal, DS.Spacing.xl)
-                .padding(.top, DS.Spacing.md)
-
-                // Progress dots
-                HStack(spacing: 10) {
-                    ForEach(0..<6, id: \.self) { i in
-                        Circle()
-                            .fill(i < viewModel.currentSplitIndex ? DS.Color.gold
-                                  : i == viewModel.currentSplitIndex ? DS.Color.crimson
-                                  : DS.Color.divider)
-                            .frame(width: i == viewModel.currentSplitIndex ? 12 : 8, height: i == viewModel.currentSplitIndex ? 12 : 8)
-                    }
-                }
-                .padding(.top, DS.Spacing.lg)
+                .frame(height: 220)
 
                 Spacer()
 
-                // Hint
-                Text(t(L.Splits.hint, vi))
-                    .font(DS.Font.serif(12))
-                    .foregroundColor(DS.Color.inkFaded.opacity(0.5))
-                    .padding(.horizontal, DS.Spacing.xl)
-                    .padding(.bottom, DS.Spacing.lg)
-            }
-            .frame(width: geo.size.width, height: geo.size.height)
-        }
-        .background(RitualBackground())
-        .onChange(of: viewModel.currentSplitIndex) { _ in
-            if viewModel.currentSplitIndex > lastShown {
-                lastShown = viewModel.currentSplitIndex
-                withAnimation(.spring(response: 0.4)) { showResult = true }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                    withAnimation(.easeOut(duration: 0.3)) { showResult = false }
+                // Completed splits indicator
+                HStack(spacing: 8) {
+                    ForEach(0..<6, id: \.self) { i in
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(i < viewModel.currentSplitIndex
+                                ? Color.gold
+                                : i == viewModel.currentSplitIndex
+                                ? Color.gold.opacity(0.4)
+                                : Color.gray.opacity(0.15))
+                            .frame(width: 32, height: 4)
+                    }
                 }
+                .padding(.bottom, 16)
+
+                // Split percentage
+                if viewModel.splitProgress[viewModel.currentSplitIndex] > 0 {
+                    Text("\(Int(viewModel.splitProgress[viewModel.currentSplitIndex] * 100))%")
+                        .font(.system(.caption, design: .monospaced))
+                        .foregroundColor(.inkBlack.opacity(0.4))
+                }
+
+                Spacer()
             }
+        }
+        .ritualBackground()
+        .onAppear {
+            dragOffset = 0
+            dragTrajectory = []
         }
     }
+}
 
-    private func commitSplit() {
-        viewModel.updateSplit(percentage: splitPosition, speed: 0, jitter: [], trajectory: [])
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            viewModel.completeSplit(percentage: splitPosition, speed: 0, jitter: [], trajectory: [])
-            splitPosition = 0.5
-        }
+// MARK: - Preview
+struct SplitsView_Previews: PreviewProvider {
+    static var previews: some View {
+        SplitsView(viewModel: RitualViewModel.preview)
     }
 }
